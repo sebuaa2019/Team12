@@ -1,0 +1,8 @@
+prefix=/home/nipo/AndroidStudioProjects/RobotApp/catkin_ws/install
+
+Name: wpb_home_bringup
+Description: Description of wpb_home_bringup
+Version: 1.0.0
+Cflags: 
+Libs: -L/home/nipo/AndroidStudioProjects/RobotApp/catkin_ws/install/lib 
+Requires: 
