@@ -49,7 +49,6 @@ public class JoyStickView extends View {
                 dot_x = init_pos.x;
                 dot_y = init_pos.y;
                 dot_r = (1.0f - scale) * getWidth() / 2;
-                Log.d("JoyStickView", String.valueOf(panel_r) + "|" + String.valueOf(dot_r));
                 return true;
             }
         });
@@ -110,5 +109,25 @@ public class JoyStickView extends View {
             dot_y = init_pos.y;
         }
         return true;
+    }
+
+    public int getWithinArea(float touch_x, float touch_y){
+        float dist = (float)Math.sqrt(Math.pow(touch_x - init_pos.x, 2) +
+                Math.pow(touch_y - init_pos.y, 2));
+        float sin = (touch_y - init_pos.y) / dist;
+        float part = (float)Math.sqrt(2.0) / 2;
+        if ((sin > part || sin < -part) && touch_y > init_pos.y){
+            return 0;
+        }
+        else if ((sin > part || sin < -part) && touch_y < init_pos.y){
+            return 1;
+        }
+        else if ((sin > -part && sin < part) && touch_x > init_pos.x){
+            return 2;
+        }
+        else if ((sin > -part && sin < part) && touch_x < init_pos.x){
+            return 3;
+        }
+        return -1;
     }
 }

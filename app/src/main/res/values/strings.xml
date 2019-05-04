@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Robot App</string>
+    <string name="Conn_Failed">Failed to Connect Robot</string>
 </resources>
