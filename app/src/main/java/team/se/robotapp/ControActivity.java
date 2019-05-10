@@ -24,10 +24,10 @@ import team.se.util.TransContro;
 public class ControActivity extends AppCompatActivity {
     private JoyStickView joyStickView;
     private TransContro transContro;
-    private static final int RIGHT = 0;
-    private static final int LEFT = 1;
-    private static final int FORWARD = 2;
-    private static final int BACK = 3;
+    private static final int BACK = 0;
+    private static final int FORWARD = 1;
+    private static final int RIGHT = 2;
+    private static final int LEFT = 3;
     private static final int IMG_PORT = 1999;
     private static final int INFO_PORT = 2000;
     private static String HOST;
@@ -45,17 +45,18 @@ public class ControActivity extends AppCompatActivity {
         final String[] addr = intent.getStringExtra("addr").split("\\|");
         HOST = addr[0];
         transContro = new TransContro(HOST, Integer.valueOf(addr[1]));
-        /*
+
         imageView = (ImageView)findViewById(R.id.camImage);
         LoadHandler loadHandler = new LoadHandler();
         Img_refresh img_refresh = new Img_refresh(HOST, IMG_PORT);
         img_refresh.accpetServer(imageView, loadHandler);
-        */
+
+
         speedText = (TextView)findViewById(R.id.speedText);
         conStateText = (TextView)findViewById(R.id.conStateText);
 
         Info_refresh info_refresh = new Info_refresh(HOST, INFO_PORT);
-        info_refresh.acceptServer(speedText);
+        info_refresh.acceptServer(speedText,loadHandler);
         transContro.checkCon(conStateText);
 
         Button button = (Button)findViewById(R.id.buttonNav);
@@ -112,6 +113,10 @@ public class ControActivity extends AppCompatActivity {
                     break;
                 case 1:
                     break;
+                case 2:
+                    speedText.setText((String)msg.obj);
+                    break;
+
             }
 
         }
