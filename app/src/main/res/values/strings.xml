@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Robot App</string>
-    <string name="Conn_Failed">Failed to Connect Robot</string>
+    <string name="conn_failed">Failed to Connect Robot</string>
+    <string name="nav">Navigation</string>
+    <string name="speed">Speed</string>
+    <string name="location">Location</string>
+    <string name="State_Con">State : Connected</string>
+    <string name="State_Out">State : Offline</string>
 </resources>

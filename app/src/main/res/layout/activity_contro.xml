@@ -10,8 +10,39 @@
         android:id="@+id/joyStickView"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/buttonNav"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nav"/>
+
+    <ImageView
+        android:id="@+id/camImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/speedText"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/speed"/>
+
+    <TextView
+        android:id="@+id/conStateText"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="120dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/State_Con"/>
 
 </RelativeLayout>

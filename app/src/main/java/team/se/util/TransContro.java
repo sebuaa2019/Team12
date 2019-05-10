@@ -1,10 +1,13 @@
 package team.se.util;
 
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+
+import team.se.robotapp.R;
 
 public class TransContro {
     private String HOST;
@@ -15,6 +18,7 @@ public class TransContro {
     private static final String TURNLEFT = "TURNLEFT";
     private static final String TURNRIGHT = "TURNRIGHT";
     private static final String STOPMOVE = "STOPMOVE";
+    private static final long INTERVAL = 100000;
 
     public TransContro(String HOST, int PORT){
         this.HOST = HOST;
@@ -55,6 +59,11 @@ public class TransContro {
         pre_contro = STOPMOVE;
     }
 
+    public void sendTarget(float target_X, float target_Y){
+        String target = String.valueOf(target_X) + "|" + String.valueOf(target_Y);
+        transMsg(target);
+    }
+
     private void transMsg(final String message){
         new Thread(new Runnable() {
             @Override
@@ -67,6 +76,28 @@ public class TransContro {
                     writer.flush();
                 }catch (Exception e){
                     e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public void checkCon(final TextView conStateText){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    try{
+                        Socket socket = new Socket(HOST, PORT);
+                        conStateText.setText(R.string.State_Con);
+                    }catch (Exception e){
+                        conStateText.setText(R.string.State_Out);
+                        e.printStackTrace();
+                    }
+                    try{
+                        Thread.sleep(INTERVAL);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();
