@@ -26,7 +26,7 @@
 
 using namespace cv;
 using namespace std;
-#define PORT 1234
+#define PORT 1999
 #define LENGTH_OF_LISTEN_QUEUE 20
 #define BUFFER_SIZE 307200
 
