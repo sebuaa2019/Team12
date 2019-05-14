@@ -25,9 +25,10 @@
 
     <ImageView
         android:id="@+id/camImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_width="560dp"
+        android:layout_height="315dp"
+        android:layout_alignParentRight="true"
+        android:scaleType="fitCenter"/>
 
     <TextView
         android:id="@+id/speedText"
