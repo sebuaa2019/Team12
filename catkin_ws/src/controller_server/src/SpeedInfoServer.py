@@ -8,7 +8,7 @@ class SpeedInfoServer:
     def __init__(self, host, port):
         self.soc = socket.socket()
         self.soc.bind((host, port))
-	self.con = None
+	    self.con = None
 
     def sendtoclient(self, msg):
         x = ('%.3f' % abs(msg.linear.x))
@@ -17,11 +17,12 @@ class SpeedInfoServer:
             try:
                 self.con.send("("+str(x)+","+str(z)+")")
             except:
+                self.con.close()
                 print('Connect Failed')
 
     def start(self, threadname):
         print('Info-Server Online!')
-	self.soc.listen(5)
-	self.con, addr = self.soc.accept()
+	    self.soc.listen(5)
+	    self.con, addr = self.soc.accept()
         rospy.Subscriber('/cmd_vel', Twist, self.sendtoclient)
         rospy.spin()
