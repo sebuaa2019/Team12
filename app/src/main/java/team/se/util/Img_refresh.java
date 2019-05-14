@@ -39,7 +39,7 @@ public class Img_refresh {
 
                     InputStream inputStream = socket.getInputStream();
 
-                    int width=720,height=480;
+                    int width=640,height=360;
                     Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
 
                     byte[] bytes = new byte[10000000];
@@ -47,13 +47,13 @@ public class Img_refresh {
 
                     double time1;
 
-                    while ((length=inputStream.read(bytes,off,10000))!=-1){
+                    while ((length=inputStream.read(bytes,off,1000))!=-1){
                         off=off+length;
-                        if(off>=1382400){
-                            off=off-1382400;
+                        if(off>=921600){
+                            off=off-921600;
                             System.out.println("time : "+System.currentTimeMillis());
 
-                            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes,0,1382400));
+                            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes,0,921600));
                             handler.obtainMessage(0,bitmap).sendToTarget();
                         }
                     }

@@ -144,7 +144,7 @@ int main(int argc,char **argv)
 	image_transport::ImageTransport it(nh);
 	image_transport::Subscriber sub = it.subscribe("camera/rgb/image_raw", 1, imageCallback);
 
-	ros::Rate loop_rate(30);
+	ros::Rate loop_rate(10);
 	while(ros::ok()){
 		ros::spinOnce();
 		loop_rate.sleep();
