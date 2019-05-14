@@ -44,20 +44,19 @@ public class ControActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final String[] addr = intent.getStringExtra("addr").split("\\|");
         HOST = addr[0];
-        transContro = new TransContro(HOST, Integer.valueOf(addr[1]));
 
         imageView = (ImageView)findViewById(R.id.camImage);
         LoadHandler loadHandler = new LoadHandler();
         Img_refresh img_refresh = new Img_refresh(HOST, IMG_PORT);
         img_refresh.accpetServer(imageView, loadHandler);
 
-
         speedText = (TextView)findViewById(R.id.speedText);
         conStateText = (TextView)findViewById(R.id.conStateText);
 
         Info_refresh info_refresh = new Info_refresh(HOST, INFO_PORT);
         info_refresh.acceptServer(speedText,loadHandler);
-        transContro.checkCon(conStateText);
+        transContro = new TransContro(HOST, Integer.valueOf(addr[1]), loadHandler);
+        transContro.checkCon();
 
         Button button = (Button)findViewById(R.id.buttonNav);
         button.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +115,9 @@ public class ControActivity extends AppCompatActivity {
                 case 2:
                     speedText.setText((String)msg.obj);
                     break;
-
+                case 3:
+                    conStateText.setText((String)msg.obj);
+                    break;
             }
 
         }

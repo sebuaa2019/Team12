@@ -24,7 +24,7 @@ public class NavActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String addr[] = intent.getStringExtra("addr").split("\\|");
-        final TransContro transContro = new TransContro(addr[0], Integer.valueOf(addr[1]));
+        //final TransContro transContro = new TransContro(addr[0], Integer.valueOf(addr[1]));
 
         ImageView mapImage = (ImageView) findViewById(R.id.navImage);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.map);
@@ -38,7 +38,7 @@ public class NavActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN){
                     float pos_x = event.getX();
                     float pos_y = event.getY();
-                    transContro.sendTarget(pos_x*scale, pos_y*scale);
+                    //transContro.sendTarget(pos_x*scale, pos_y*scale);
                 }
                 return true;
             }
