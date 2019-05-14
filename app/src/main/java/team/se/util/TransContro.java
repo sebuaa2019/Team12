@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import team.se.robotapp.R;
+import team.se.robotapp.ControActivity.LoadHandler;
 
 public class TransContro {
     private String HOST;
@@ -19,11 +20,13 @@ public class TransContro {
     private static final String TURNRIGHT = "TURNRIGHT";
     private static final String STOPMOVE = "STOPMOVE";
     private static final long INTERVAL = 100000;
+    private LoadHandler handler;
 
-    public TransContro(String HOST, int PORT){
+    public TransContro(String HOST, int PORT, LoadHandler handler){
         this.HOST = HOST;
         this.PORT = PORT;
         pre_contro = "";
+        this.handler = handler;
     }
 
     public void moveForward(){
@@ -81,16 +84,18 @@ public class TransContro {
         }).start();
     }
 
-    public void checkCon(final TextView conStateText){
+    public void checkCon(){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true){
                     try{
                         Socket socket = new Socket(HOST, PORT);
-                        conStateText.setText(R.string.State_Con);
+                        //conStateText.setText(R.string.State_Con);
+                        handler.obtainMessage(3,R.string.State_Con).sendToTarget();
                     }catch (Exception e){
-                        conStateText.setText(R.string.State_Out);
+                        //conStateText.setText(R.string.State_Out);
+                        handler.obtainMessage(3,R.string.State_Out).sendToTarget();
                         e.printStackTrace();
                     }
                     try{

@@ -21,8 +21,8 @@ if __name__ == '__main__':
     soc.listen(5)
     while (True):
         conn, addr = soc.accept()
+        print('Connect From : ', conn)
         data = conn.recv(1024)
-        print(data)
         if (data in SIGNAL):
             pub.publish(control_signal(data, False))
         else:
