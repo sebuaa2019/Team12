@@ -1,2 +1,2 @@
-rplidar_ros:wpb_home/wpb_home_behaviors:wpb_home/wpb_home_bringup:wpb_home/wpb_home_remote:wpb_home/wpb_home_tutorials:wpb_home/wpbh_local_planner
--DCATKIN_DEVEL_PREFIX=/home/nipo/AndroidStudioProjects/RobotApp/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/nipo/AndroidStudioProjects/RobotApp/catkin_ws/install -G Unix Makefiles
+controller_server:my_image_transport:wpb_home/wpb_home_behaviors:wpb_home/wpb_home_bringup:wpb_home/wpb_home_remote:wpb_home/wpb_home_tutorials:wpb_home/wpbh_local_planner
+-DCATKIN_DEVEL_PREFIX=/home/chen/AndroidStudioProjects/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/chen/AndroidStudioProjects/catkin_ws/install -G Unix Makefiles

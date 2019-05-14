@@ -38,7 +38,10 @@ int new_server_socket;
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 
-	Mat s_img = cv_bridge::toCvShare(msg,"bgr8")->image;
+	Mat s_img1 = cv_bridge::toCvShare(msg,"bgr8")->image;
+	Mat s_img;
+	resize(s_img1,s_img,cv::Size(720,480));
+
 //	cv::waitKey(30);
 	if(s_img.empty()){
 		ROS_ERROR("open error\n");
