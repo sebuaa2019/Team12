@@ -6,4 +6,5 @@
     <string name="location">Location</string>
     <string name="State_Con">State : Connected</string>
     <string name="State_Out">State : Offline</string>
+    <string name="startNav">Start Navigation</string>
 </resources>

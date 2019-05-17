@@ -19,6 +19,7 @@ public class TransContro {
     private static final String TURNLEFT = "TURNLEFT";
     private static final String TURNRIGHT = "TURNRIGHT";
     private static final String STOPMOVE = "STOPMOVE";
+    private static final String STARTNAV = "STARTNAV";
     private static final long INTERVAL = 100000;
     private LoadHandler handler;
 
@@ -27,6 +28,11 @@ public class TransContro {
         this.PORT = PORT;
         pre_contro = "";
         this.handler = handler;
+    }
+
+    public TransContro(String HOST, int PORT){
+        this.HOST = HOST;
+        this.PORT = PORT;
     }
 
     public void moveForward(){
@@ -62,9 +68,12 @@ public class TransContro {
         pre_contro = STOPMOVE;
     }
 
-    public void sendTarget(float target_X, float target_Y){
-        String target = String.valueOf(target_X) + "|" + String.valueOf(target_Y);
-        transMsg(target);
+    public void startNav(){
+        transMsg(STARTNAV);
+    }
+
+    public void sendTarget(float pos_x, float pos_y){
+        transMsg("(" + String.valueOf(pos_x) + "," + String.valueOf(pos_y) + ",1.0)");
     }
 
     private void transMsg(final String message){
@@ -92,10 +101,10 @@ public class TransContro {
                     try{
                         Socket socket = new Socket(HOST, PORT);
                         //conStateText.setText(R.string.State_Con);
-                        handler.obtainMessage(3,R.string.State_Con).sendToTarget();
+                        handler.obtainMessage(3,"State : Connected").sendToTarget();
                     }catch (Exception e){
                         //conStateText.setText(R.string.State_Out);
-                        handler.obtainMessage(3,R.string.State_Out).sendToTarget();
+                        handler.obtainMessage(3,"State : Offline").sendToTarget();
                         e.printStackTrace();
                     }
                     try{

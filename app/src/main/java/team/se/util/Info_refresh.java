@@ -26,7 +26,6 @@ public class Info_refresh {
                 try{
                     Socket socket = new Socket(Host, Port);
                     InputStream inputStream = socket.getInputStream();
-                    DataInputStream dataInputStream = new DataInputStream(inputStream);
 
                     byte[] bytes = new byte[ByteLen];
                     int length = 0;
