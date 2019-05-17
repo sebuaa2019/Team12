@@ -6,10 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".NavActivity">
 
-    <ImageView
-        android:id="@+id/navImage"
+    <team.se.robotapp.NavMapView
+        android:id="@+id/navMap"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"/>
+
+    <Button
+        android:id="@+id/startNav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/startNav"/>
 
 </RelativeLayout>
