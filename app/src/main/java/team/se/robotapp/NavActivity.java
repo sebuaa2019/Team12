@@ -14,12 +14,14 @@ import android.widget.ImageView;
 import java.io.InputStream;
 import java.net.Socket;
 
+import team.se.util.Map_refresh;
 import team.se.util.TransContro;
 
 public class NavActivity extends AppCompatActivity {
 
     private static String HOST;
     private static int LOC_REF_PORT = 2001;
+    private static int MAP_PORT = 2003;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -35,6 +37,11 @@ public class NavActivity extends AppCompatActivity {
         final NavMapView navMapView = (NavMapView)findViewById(R.id.navMap);
         Button startNav = (Button)findViewById(R.id.startNav);
 
+        // accept map
+        Map_refresh map_refresh = new Map_refresh(HOST,MAP_PORT,navMapView);
+        map_refresh.accpetServer();
+
+        /////
         navMapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

@@ -40,7 +40,7 @@ public class Img_refresh {
                     InputStream inputStream = socket.getInputStream();
 
                     int width=640,height=360;
-                    Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+                    Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.RGB_565);
 
                     byte[] bytes = new byte[10000000];
                     int length, off=0;

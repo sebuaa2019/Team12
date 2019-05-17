@@ -72,7 +72,6 @@ public class NavMapView extends View {
         canvas.drawBitmap(map, null, new Rect(
                 0, 0, (int)viewHeight, (int)viewWidth
         ), null);
-
         canvas.drawBitmap(roboBitmap, null, new Rect(
                 (int)(roboPos_X - roboPos_r),
                 (int)(roboPos_Y - roboPos_r),
