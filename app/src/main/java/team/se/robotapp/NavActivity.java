@@ -18,7 +18,6 @@ import team.se.util.TransContro;
 
 public class NavActivity extends AppCompatActivity {
 
-    private static Canvas canvas;
     private static String HOST;
     private static int LOC_REF_PORT = 2001;
 
