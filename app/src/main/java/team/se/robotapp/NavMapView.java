@@ -107,4 +107,8 @@ public class NavMapView extends View {
         tarPos_X.remove(tarPos_index);
         tarPos_Y.remove(tarPos_index);
     }
+
+    public void setMap(Bitmap map){
+        this.map = map;
+    }
 }
