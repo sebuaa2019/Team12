@@ -1,12 +1,12 @@
-#include <ros/ros.h>
+#include<ros/ros.h>
+#include<nav_msgs/OccupancyGrid.h>
+
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 
 #include <sensor_msgs/image_encodings.h>
-
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
 #include<string>    
 #include <sstream>
 #include <std_msgs/UInt8.h> 
@@ -24,9 +24,9 @@
 #include  <arpa/inet.h>  
 #include  <string.h>
 
-using namespace cv;
 using namespace std;
-#define PORT 1999
+
+#define PORT 2003
 #define LENGTH_OF_LISTEN_QUEUE 20
 #define BUFFER_SIZE 2000
 
@@ -34,54 +34,30 @@ struct sockaddr_in server_addr;
 struct sockaddr_in client_addr;
 int server_socket;
 int new_server_socket;
+int width=992;
+int height=992;
+
+void call_back(const nav_msgs::OccupancyGrid::ConstPtr &msg){
+	printf("call back begin\n");	
+	width = msg->info.width;
+	height = msg->info.height;
+	printf("data width :%d  height:%d\n",width,height);
 
 
-void imageCallback(const sensor_msgs::ImageConstPtr& msg){
+	uchar* send_buffer = new uchar[width*height];
+	int i;
 
-	Mat s_img1 = cv_bridge::toCvShare(msg,"bgr8")->image;
-	Mat s_img;
-	resize(s_img1,s_img,cv::Size(720,480));
-
-//	cv::waitKey(30);
-	if(s_img.empty()){
-		ROS_ERROR("open error\n");
-		exit(1);
+	for(i=0;i<width*height;i++){
+	//	if(msg->data[i]!=-1) printf("%d ",msg->data[i]);
+		send_buffer[i]=(uchar)(msg->data[i]);
 	}
+		
 
-	vector<uchar> encode_img;
-	int i,j;
-	uchar* pxvec = s_img.ptr<uchar>(0);	
-
-	printf("row is :%d ,col is :%d channels is :%d\n",s_img.rows,s_img.cols,s_img.channels());
-	for( i=0;i<s_img.rows;i++)	//高度
-	{
-		pxvec = s_img.ptr<uchar>(i);	
-		for(j=0;j<s_img.cols*s_img.channels();j=j+3)
-		{	
-			encode_img.push_back(pxvec[j+2]);
-			encode_img.push_back(pxvec[j+1]);
-			encode_img.push_back(pxvec[j]);
-			encode_img.push_back(0xff);
-		}
-	}
-
-	//get_send_buffer
-	int encode_img_size = encode_img.size();
-	int s_img_size = s_img.rows * s_img.cols*3;
-
-	uchar* send_buffer = new uchar[encode_img.size()];
-	copy(encode_img.begin(),encode_img.end(),send_buffer);
-
-
-	//send image_length
-	int toSend =encode_img_size,receive=0,finished=0;
-	printf("img_size is %d\n",toSend);
-
-
-	//send start
+	int toSend = width*height;
+	int finished=0,receive=0;
 	while(toSend>0){
 		int size = toSend<BUFFER_SIZE?toSend:BUFFER_SIZE;
-		if((receive = send(new_server_socket,send_buffer+finished,size,0)))
+		if(receive = send(new_server_socket,send_buffer+finished,size,0))
 		{
 			if(receive == -1)
 			{
@@ -92,24 +68,22 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 				toSend -= receive; // 剩余发送数据
 				finished += receive;	// 已发送数据
 			}
-		}	
+		}
 	}
-
 
 }
 
 
 int main(int argc,char **argv)
 {
-
-	ros::init(argc,argv,"Socket_Client");
-	ROS_INFO("------------");	
-
+	ros::init(argc,argv,"map_server");
+	ROS_INFO("--------------");
+	printf("%d \n",uchar(-1));
 	bzero(&server_addr,sizeof(server_addr)); //把一段内存区的内容全部设置为
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = htons(INADDR_ANY);
 	server_addr.sin_port = htons(PORT);
-	
+
 	if((server_socket=socket(AF_INET,SOCK_STREAM,0))<0)
 	{
 		ROS_ERROR("Creat Socket failed!\n");
@@ -129,7 +103,8 @@ int main(int argc,char **argv)
 	while(flag){
 		socklen_t length = sizeof(client_addr);
 		new_server_socket = accept(server_socket,(struct sockaddr*)&client_addr,&length);
-	
+
+
 		if(new_server_socket <0 ){
 			perror("server accept failed\n");
 		}
@@ -138,24 +113,18 @@ int main(int argc,char **argv)
 		}
 	
 	}
-
 	printf("accept \n");
-	ros::NodeHandle nh;
-	image_transport::ImageTransport it(nh);
-	image_transport::Subscriber sub = it.subscribe("camera/rgb/image_raw", 1, imageCallback);
 
-	ros::Rate loop_rate(10);
+
+
+	ros::NodeHandle nh;
+	ros::Subscriber sub = nh.subscribe("map",1,call_back);
+
+	ros::Rate loop_rate(1);
 	while(ros::ok()){
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
+	
+	return 0;
 }
-
-
-
-
-
-
-
-
-

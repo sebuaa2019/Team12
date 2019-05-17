@@ -134,6 +134,8 @@ target_link_libraries(my_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_executable(my_subscriber src/my_subscriber.cpp)
 target_link_libraries(my_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
+add_executable(map_server src/map_server.cpp)
+target_link_libraries(map_server ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

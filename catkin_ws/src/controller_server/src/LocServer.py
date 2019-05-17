@@ -22,5 +22,5 @@ class LocServer:
         print("LocServer Online!")
         self.soc.listen(5)
         self.con, addr = self.soc.accept()
-        rospy.Subscriber('amcl_pose', PoseWithCovarianceStamped, sendtoclient)
+        rospy.Subscriber('amcl_pose', PoseWithCovarianceStamped, self.sendtoclient)
         rospy.spin()
