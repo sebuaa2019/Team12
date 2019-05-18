@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,9 @@ public class NavActivity extends AppCompatActivity {
     private static String HOST;
     private static int LOC_REF_PORT = 2001;
     private static int MAP_PORT = 2003;
+    private static final int MAP_PIXEL_SIZE = 992;
+    private static final int MAP_REAL_SIZE = 50;
+    private static final int MAP_TRANS = 25;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -48,7 +52,13 @@ public class NavActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     float pos_x = event.getX();
                     float pos_y = event.getY();
+                    float scale = navMapView.getScale();
                     navMapView.addTarPos(pos_x, pos_y);
+                    pos_x = pos_x * scale;
+                    pos_y = pos_y * scale;
+                    pos_x = pos_x / MAP_PIXEL_SIZE * MAP_REAL_SIZE - MAP_TRANS;
+                    pos_y = MAP_TRANS - pos_y / MAP_PIXEL_SIZE * MAP_REAL_SIZE;
+                    Log.d("NavMapViewClick", String.valueOf(pos_x) + "|" + String.valueOf(pos_y));
                     transContro.sendTarget(pos_x, pos_y);
                 }
                 return true;
@@ -73,7 +83,12 @@ public class NavActivity extends AppCompatActivity {
                     int length = 0;
                     while ((length = inputStream.read(bytes,0,20))!=-1){
                         String[] loc = new String(bytes).split(",");
-                        navMapView.setRoboPos(Float.valueOf(loc[0]), Float.valueOf(loc[1]));
+                        float pos_x = Float.valueOf(loc[0]);
+                        float pos_y = Float.valueOf(loc[1]);
+                        float scale = navMapView.getScale();
+                        pos_x = (MAP_TRANS + pos_x ) * MAP_PIXEL_SIZE / MAP_REAL_SIZE / scale;
+                        pos_y = (MAP_TRANS - pos_y) * MAP_PIXEL_SIZE / MAP_REAL_SIZE / scale;
+                        navMapView.setRoboPos(pos_x, pos_y);
                     }
                 }catch (Exception e){
                     e.printStackTrace();

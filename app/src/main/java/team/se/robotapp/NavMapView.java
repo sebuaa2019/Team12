@@ -27,6 +27,7 @@ public class NavMapView extends View {
     private static ArrayList<Float> tarPos_Y;
     private static float viewWidth;
     private static float viewHeight;
+    private static float scale;
 
     public NavMapView(Context context, AttributeSet attributeSet){
         super(context, attributeSet);
@@ -42,6 +43,9 @@ public class NavMapView extends View {
                 viewHeight = getHeight();
                 roboPos_X = viewWidth / 2;
                 roboPos_Y = viewHeight / 2;
+                //Log.d("WIDTH", String.valueOf(viewHeight) + " " + String.valueOf(viewWidth));
+                //Log.d("Density", String.valueOf(getResources().getDisplayMetrics().density) + " " + String.valueOf(map.getHeight()));
+                scale = (float) map.getHeight() / getResources().getDisplayMetrics().density / viewHeight * 2;
                 return true;
             }
         });
@@ -109,5 +113,9 @@ public class NavMapView extends View {
 
     public void setMap(Bitmap map){
         this.map = map;
+    }
+
+    public float getScale(){
+        return scale;
     }
 }
