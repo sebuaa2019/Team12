@@ -16,12 +16,14 @@ public class Map_refresh {
     private static int port;
     private static NavMapView navMapView;
     private static ControActivity.LoadHandler loadHandler;
+    private static boolean EXIT;
 
     public  Map_refresh(String _Host, int _port, NavMapView _navMapView){
         Host = _Host;
         port = _port;
         navMapView = _navMapView;
         loadHandler = null;
+        EXIT = false;
     }
 
     public Map_refresh(String _Host, int _port, ControActivity.LoadHandler handler){
@@ -29,6 +31,7 @@ public class Map_refresh {
         port = _port;
         loadHandler = handler;
         navMapView = null;
+        EXIT = false;
     }
 
     public void accpetServer(){
@@ -48,7 +51,7 @@ public class Map_refresh {
 
                     double time1;
 
-                    while ((length=inputStream.read(bytes,off,1000))!=-1){
+                    while ((length=inputStream.read(bytes,off,1000))!=-1 && !EXIT){
                         off=off+length;
                         if(off>=984064){
                             off=off-984064;
@@ -90,5 +93,12 @@ public class Map_refresh {
 
     }
 
+    public void stopRecv(){
+        EXIT = true;
+    }
 
+    public void startRecv(){
+        EXIT = false;
+        accpetServer();
+    }
 }

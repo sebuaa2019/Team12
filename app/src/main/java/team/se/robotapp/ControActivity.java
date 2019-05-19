@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.net.Socket;
+import java.sql.Time;
 
 import team.se.util.Img_refresh;
 import team.se.util.Info_refresh;
@@ -52,8 +53,7 @@ public class ControActivity extends AppCompatActivity {
 
         imageView = (ImageView)findViewById(R.id.camImage);
         LoadHandler loadHandler = new LoadHandler();
-        Img_refresh img_refresh = new Img_refresh(HOST, IMG_PORT);
-        img_refresh.accpetServer(imageView, loadHandler);
+        final Img_refresh img_refresh = new Img_refresh(HOST, IMG_PORT, loadHandler);
 
         speedText = (TextView)findViewById(R.id.speedText);
         conStateText = (TextView)findViewById(R.id.conStateText);
@@ -63,8 +63,7 @@ public class ControActivity extends AppCompatActivity {
         transContro = new TransContro(HOST, Integer.valueOf(addr[1]), loadHandler);
         transContro.checkCon();
 
-        Map_refresh map_refresh = new Map_refresh(HOST, MAP_PORT, loadHandler);
-        map_refresh.accpetServer();
+        final Map_refresh map_refresh = new Map_refresh(HOST, MAP_PORT, loadHandler);
 
         Button navButton = (Button)findViewById(R.id.buttonNav);
         Button camButton = (Button)findViewById(R.id.displayCam);
@@ -81,11 +80,15 @@ public class ControActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Switch = DISPLAYCAM;
+                img_refresh.stopRecv();
+                img_refresh.startRecv();
             }
         });
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                map_refresh.stopRecv();
+                map_refresh.startRecv();
                 Switch = DISPLAYMAP;
             }
         });

@@ -24,13 +24,17 @@ import team.se.robotapp.ControActivity.LoadHandler;
 public class Img_refresh {
     private static String Host;
     private static int Port;
+    private static boolean EXIT;
+    private static LoadHandler loadHandler;
 
-    public Img_refresh(String host, int port){
+    public Img_refresh(String host, int port, LoadHandler _loadhandler){
         this.Host = host;
         this.Port = port;
+        this.EXIT = false;
+        loadHandler = _loadhandler;
     }
 
-    public void accpetServer(ImageView imageView, final LoadHandler handler){
+    public void accpetServer(){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -39,7 +43,7 @@ public class Img_refresh {
 
                     InputStream inputStream = socket.getInputStream();
 
-                    int width=640,height=360;
+                    int width=720,height=480;
                     Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.RGB_565);
 
                     byte[] bytes = new byte[10000000];
@@ -47,14 +51,14 @@ public class Img_refresh {
 
                     double time1;
 
-                    while ((length=inputStream.read(bytes,off,1000))!=-1){
+                    while ((length=inputStream.read(bytes,off,1000))!=-1 && !EXIT){
                         off=off+length;
-                        if(off>=921600){
-                            off=off-921600;
+                        if(off>=1382400){
+                            off=off-1382400;
                             System.out.println("time : "+System.currentTimeMillis());
 
-                            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes,0,921600));
-                            handler.obtainMessage(0,bitmap).sendToTarget();
+                            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes,0,1382400));
+                            loadHandler.obtainMessage(0,bitmap).sendToTarget();
                         }
                     }
                     socket.close();
@@ -65,4 +69,12 @@ public class Img_refresh {
         }).start();
     }
 
+    public void stopRecv(){
+        EXIT = true;
+    }
+
+    public void startRecv(){
+        EXIT = false;
+        accpetServer();
+    }
 }
