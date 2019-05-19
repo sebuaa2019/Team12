@@ -80,6 +80,7 @@ public class ControActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Switch = DISPLAYCAM;
+                map_refresh.stopRecv();
                 img_refresh.stopRecv();
                 img_refresh.startRecv();
             }
@@ -87,9 +88,10 @@ public class ControActivity extends AppCompatActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Switch = DISPLAYMAP;
+                img_refresh.stopRecv();
                 map_refresh.stopRecv();
                 map_refresh.startRecv();
-                Switch = DISPLAYMAP;
             }
         });
 

@@ -75,6 +75,11 @@ public class Img_refresh {
 
     public void startRecv(){
         EXIT = false;
+        try{
+            Thread.sleep(100);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         accpetServer();
     }
 }
