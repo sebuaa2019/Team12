@@ -122,7 +122,6 @@ public class ControActivity extends AppCompatActivity {
     public class LoadHandler extends Handler{
         @Override
         public  void handleMessage(Message msg){
-            //          super.handleMessage(msg);
             switch (msg.what){
                 case 0:
                     if (Switch == DISPLAYCAM)
