@@ -83,7 +83,7 @@ public class ControActivity extends AppCompatActivity {
                 Switch = DISPLAYCAM;
             }
         });
-        navButton.setOnClickListener(new View.OnClickListener() {
+        mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Switch = DISPLAYMAP;
