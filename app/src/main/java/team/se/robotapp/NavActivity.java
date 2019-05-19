@@ -26,6 +26,7 @@ import team.se.util.TransContro;
 public class NavActivity extends AppCompatActivity {
 
     private static String HOST;
+    private static final int INFO_PORT = 2000;
     private static int LOC_REF_PORT = 2001;
     private static int MAP_PORT = 2004;
     private static final int MAP_PIXEL_SIZE = 992;
@@ -51,7 +52,7 @@ public class NavActivity extends AppCompatActivity {
         LoadHandler loadHandler = new LoadHandler();
         final TransContro transContro = new TransContro(HOST, Integer.valueOf(addr[1]), loadHandler);
         transContro.checkCon();
-        Info_refresh info_refresh = new Info_refresh(HOST, Integer.valueOf(addr[1]), loadHandler);
+        Info_refresh info_refresh = new Info_refresh(HOST, INFO_PORT, loadHandler);
         info_refresh.acceptServer();
         // accept map
         Img_refresh img_refresh = new Img_refresh(HOST, MAP_PORT, navMapView);
