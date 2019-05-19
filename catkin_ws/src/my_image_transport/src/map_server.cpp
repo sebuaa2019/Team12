@@ -36,8 +36,10 @@ int server_socket;
 int new_server_socket;
 int width=992;
 int height=992;
+int flag_connect=0;
 
 void call_back(const nav_msgs::OccupancyGrid::ConstPtr &msg){
+
 	printf("call back begin\n");	
 	width = msg->info.width;
 	height = msg->info.height;
@@ -62,7 +64,9 @@ void call_back(const nav_msgs::OccupancyGrid::ConstPtr &msg){
 			if(receive == -1)
 			{
 				printf("receive error");
-				break;
+				flag_connect=0;
+				new_server_socket=-1;
+				return;
 			}
 			else{
 				toSend -= receive; // 剩余发送数据
@@ -78,6 +82,10 @@ int main(int argc,char **argv)
 {
 	ros::init(argc,argv,"map_server");
 	ROS_INFO("--------------");
+
+	ros::NodeHandle nh;
+	ros::Subscriber sub = nh.subscribe("map",1,call_back);
+
 	printf("%d \n",uchar(-1));
 	bzero(&server_addr,sizeof(server_addr)); //把一段内存区的内容全部设置为
 	server_addr.sin_family = AF_INET;
@@ -109,21 +117,15 @@ int main(int argc,char **argv)
 			perror("server accept failed\n");
 		}
 		else{
-			flag=0;
+			printf("accept\n");
+			flag_connect=1;
+			ros::Rate loop_rate(1);
+			while(ros::ok() && flag_connect==1){
+				ros::spinOnce();
+				loop_rate.sleep();
+			}
 		}
 	
-	}
-	printf("accept \n");
-
-
-
-	ros::NodeHandle nh;
-	ros::Subscriber sub = nh.subscribe("map",1,call_back);
-
-	ros::Rate loop_rate(1);
-	while(ros::ok()){
-		ros::spinOnce();
-		loop_rate.sleep();
 	}
 	
 	return 0;

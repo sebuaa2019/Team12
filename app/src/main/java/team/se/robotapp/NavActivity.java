@@ -43,7 +43,7 @@ public class NavActivity extends AppCompatActivity {
 
         // accept map
         Map_refresh map_refresh = new Map_refresh(HOST,MAP_PORT,navMapView);
-        map_refresh.accpetServer();
+        map_refresh.startRecv();
 
         /////
         navMapView.setOnTouchListener(new View.OnTouchListener() {

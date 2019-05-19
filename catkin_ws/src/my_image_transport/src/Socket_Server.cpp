@@ -29,15 +29,17 @@ using namespace cv;
 using namespace std;
 #define PORT 1999
 #define LENGTH_OF_LISTEN_QUEUE 20
-#define BUFFER_SIZE 2000
+#define BUFFER_SIZE 1382400
 
 struct sockaddr_in server_addr;
 struct sockaddr_in client_addr;
 int server_socket;
 int new_server_socket;
-
+int flag_connect=0;
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg){
+	
+	uchar* receive_buffer = new uchar[10];
 
 	double time1,time2,time3;
 
@@ -90,8 +92,10 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 		{
 			if(receive == -1)
 			{
-				printf("receive error");
-				break;
+				printf("receive error\n");
+				flag_connect=0;
+				new_server_socket=1;
+				return;
 			}
 			else{
 				toSend -= receive; // 剩余发送数据
@@ -110,7 +114,13 @@ int main(int argc,char **argv)
 {
 
 	ros::init(argc,argv,"Socket_Client");
-	ROS_INFO("------------");	
+	ROS_INFO("------------");
+	
+	ros::NodeHandle nh;
+	image_transport::ImageTransport it(nh);
+	image_transport::Subscriber sub = it.subscribe("camera/rgb/image_raw", 1, imageCallback);
+	ros::Rate loop_rate(10);
+
 
 	bzero(&server_addr,sizeof(server_addr)); //把一段内存区的内容全部设置为
 	server_addr.sin_family = AF_INET;
@@ -140,22 +150,19 @@ int main(int argc,char **argv)
 		if(new_server_socket <0 ){
 			perror("server accept failed\n");
 		}
-		else{
-			flag=0;
+		else{	
+			printf("accept \n");
+			flag_connect=1;
+			while(ros::ok() && flag_connect==1){
+				ros::spinOnce();
+				loop_rate.sleep();
+			}
 		}
 	
 	}
 
-	printf("accept \n");
-	ros::NodeHandle nh;
-	image_transport::ImageTransport it(nh);
-	image_transport::Subscriber sub = it.subscribe("camera/rgb/image_raw", 1, imageCallback);
+	
 
-	ros::Rate loop_rate(10);
-	while(ros::ok()){
-		ros::spinOnce();
-		loop_rate.sleep();
-	}
 }
 
 

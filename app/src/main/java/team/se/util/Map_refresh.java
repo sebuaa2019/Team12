@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
@@ -17,6 +18,7 @@ public class Map_refresh {
     private static NavMapView navMapView;
     private static ControActivity.LoadHandler loadHandler;
     private static boolean EXIT;
+    private static Socket socket;
 
     public  Map_refresh(String _Host, int _port, NavMapView _navMapView){
         Host = _Host;
@@ -41,12 +43,12 @@ public class Map_refresh {
             @Override
             public void run() {
                 try{
-                    Socket socket = new Socket(Host,port);
+                    socket = new Socket(Host,port);
 
                     InputStream inputStream = socket.getInputStream();
 
-                    byte[] bytes = new byte[10000000];
-                    byte[] bytes2 = new byte[40000000];
+                    byte[] bytes = new byte[2000000];
+                    byte[] bytes2 = new byte[8000000];
                     int length, off=0;
 
                     double time1;
@@ -81,7 +83,7 @@ public class Map_refresh {
                             if (navMapView != null)
                                 navMapView.setMap(bitmap);
                             else if (loadHandler != null)
-                                loadHandler.obtainMessage(1, bitmap);
+                                loadHandler.obtainMessage(1, bitmap).sendToTarget();
                         }
                     }
                     socket.close();

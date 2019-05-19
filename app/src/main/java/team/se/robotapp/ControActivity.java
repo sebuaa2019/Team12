@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.sql.Time;
 
@@ -41,6 +43,7 @@ public class ControActivity extends AppCompatActivity {
     private static int Switch = 0;
     private static final int DISPLAYCAM = 0;
     private static final int DISPLAYMAP = 1;
+    private static final String STOPRECV = "STOPRECV";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,19 @@ public class ControActivity extends AppCompatActivity {
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                map_refresh.stopRecv();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            Socket socket = new Socket(HOST, Integer.valueOf(addr[1]));
+                            OutputStream outputStream = socket.getOutputStream();
+                            outputStream.write(STOPRECV.getBytes());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
                 Intent intent = new Intent(ControActivity.this, NavActivity.class);
                 intent.putExtra("addr", addr[0] + "|" + addr[1]);
                 startActivity(intent);
@@ -81,7 +97,6 @@ public class ControActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Switch = DISPLAYCAM;
                 map_refresh.stopRecv();
-                img_refresh.stopRecv();
                 img_refresh.startRecv();
             }
         });
@@ -90,7 +105,6 @@ public class ControActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Switch = DISPLAYMAP;
                 img_refresh.stopRecv();
-                map_refresh.stopRecv();
                 map_refresh.startRecv();
             }
         });

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -31,7 +32,8 @@ public class NavMapView extends View {
 
     public NavMapView(Context context, AttributeSet attributeSet){
         super(context, attributeSet);
-        this.map = BitmapFactory.decodeResource(getResources(), R.mipmap.map);
+        this.map = BitmapFactory.decodeResource(getResources(), R.mipmap.map).copy(Bitmap.Config.RGB_565, true);
+        //this.map = Bitmap.createBitmap(this.map, 0, 0, this.map.getWidth(), this.map.getHeight(), matrix, true);
         this.roboBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.robot_pos);
         this.tarBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.target_pos);
 

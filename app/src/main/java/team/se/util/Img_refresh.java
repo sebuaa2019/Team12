@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -26,6 +27,7 @@ public class Img_refresh {
     private static int Port;
     private static boolean EXIT;
     private static LoadHandler loadHandler;
+    private static Socket socket;
 
     public Img_refresh(String host, int port, LoadHandler _loadhandler){
         this.Host = host;
@@ -39,9 +41,10 @@ public class Img_refresh {
             @Override
             public void run() {
                 try{
-                    Socket socket = new Socket(Host,Port);
+                    socket = new Socket(Host,Port);
 
                     InputStream inputStream = socket.getInputStream();
+
 
                     int width=720,height=480;
                     Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.RGB_565);
@@ -61,6 +64,7 @@ public class Img_refresh {
                             loadHandler.obtainMessage(0,bitmap).sendToTarget();
                         }
                     }
+
                     socket.close();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -75,11 +79,7 @@ public class Img_refresh {
 
     public void startRecv(){
         EXIT = false;
-        try{
-            Thread.sleep(100);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         accpetServer();
     }
+
 }
