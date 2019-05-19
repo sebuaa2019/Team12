@@ -23,6 +23,7 @@
 #include <netinet/in.h>   
 #include  <arpa/inet.h>  
 #include  <string.h>
+#include <time.h>
 
 using namespace cv;
 using namespace std;
@@ -37,6 +38,8 @@ int new_server_socket;
 
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg){
+
+	double time1,time2,time3;
 
 	Mat s_img1 = cv_bridge::toCvShare(msg,"bgr8")->image;
 	Mat s_img;
@@ -53,6 +56,8 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 	uchar* pxvec = s_img.ptr<uchar>(0);	
 
 	printf("row is :%d ,col is :%d channels is :%d\n",s_img.rows,s_img.cols,s_img.channels());
+	
+	time1=clock();
 	for( i=0;i<s_img.rows;i++)	//高度
 	{
 		pxvec = s_img.ptr<uchar>(i);	
@@ -64,7 +69,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 			encode_img.push_back(0xff);
 		}
 	}
-
+	time2=clock();
 	//get_send_buffer
 	int encode_img_size = encode_img.size();
 	int s_img_size = s_img.rows * s_img.cols*3;
@@ -95,7 +100,9 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 		}	
 	}
 
+	time3 = clock();
 
+	printf("time cost is :  %f   %f\n",time2-time1,time3-time2);
 }
 
 
