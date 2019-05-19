@@ -8,18 +8,30 @@ import java.net.Socket;
 import java.net.SocketAddress;
 
 import team.se.robotapp.ControActivity;
+import team.se.robotapp.NavActivity;
 
 public class Info_refresh {
     private static String Host;
     private static int Port;
     private static final int ByteLen = 2048;
+    private ControActivity.LoadHandler controHandler;
+    private NavActivity.LoadHandler navHandler;
 
-    public Info_refresh(String host, int port) {
+    public Info_refresh(String host, int port, ControActivity.LoadHandler loadHandler) {
         Host = host;
         Port = port;
+        controHandler = loadHandler;
+        navHandler = null;
     }
 
-    public void acceptServer(final TextView speedText,final ControActivity.LoadHandler handler) {
+    public Info_refresh(String host, int port, NavActivity.LoadHandler loadHandler) {
+        Host = host;
+        Port = port;
+        controHandler = null;
+        navHandler = loadHandler;
+    }
+
+    public void acceptServer() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -33,7 +45,10 @@ public class Info_refresh {
                         String msg = new String(bytes);
      //                   System.out.println("length is"+length);
       //                  Log.d("INFO", msg);
-                        handler.obtainMessage(2,msg.substring(0,13)).sendToTarget();
+                        if (controHandler != null)
+                            controHandler.obtainMessage(2,msg.substring(0,13)).sendToTarget();
+                        else if (navHandler != null)
+                            navHandler.obtainMessage(2,msg.substring(0,13)).sendToTarget();
                     }
                 }catch (Exception e){
                     e.printStackTrace();

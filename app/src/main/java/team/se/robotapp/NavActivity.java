@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +13,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.InputStream;
 import java.net.Socket;
 
+import team.se.util.Img_refresh;
+import team.se.util.Info_refresh;
 import team.se.util.Map_refresh;
 import team.se.util.TransContro;
 
@@ -22,10 +27,12 @@ public class NavActivity extends AppCompatActivity {
 
     private static String HOST;
     private static int LOC_REF_PORT = 2001;
-    private static int MAP_PORT = 2003;
+    private static int MAP_PORT = 2004;
     private static final int MAP_PIXEL_SIZE = 992;
     private static final int MAP_REAL_SIZE = 50;
     private static final int MAP_TRANS = 25;
+    private static TextView stateText;
+    private static TextView velText;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -36,14 +43,19 @@ public class NavActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String addr[] = intent.getStringExtra("addr").split("\\|");
         HOST = addr[0];
-        final TransContro transContro = new TransContro(HOST, Integer.valueOf(addr[1]));
 
         final NavMapView navMapView = (NavMapView)findViewById(R.id.navMap);
         Button startNav = (Button)findViewById(R.id.startNav);
-
+        velText = findViewById(R.id.velText);
+        stateText = findViewById(R.id.stateText);
+        LoadHandler loadHandler = new LoadHandler();
+        final TransContro transContro = new TransContro(HOST, Integer.valueOf(addr[1]), loadHandler);
+        transContro.checkCon();
+        Info_refresh info_refresh = new Info_refresh(HOST, Integer.valueOf(addr[1]), loadHandler);
+        info_refresh.acceptServer();
         // accept map
-        Map_refresh map_refresh = new Map_refresh(HOST,MAP_PORT,navMapView);
-        map_refresh.startRecv();
+        Img_refresh img_refresh = new Img_refresh(HOST, MAP_PORT, navMapView);
+        img_refresh.accpetServer();
 
         /////
         navMapView.setOnTouchListener(new View.OnTouchListener() {
@@ -86,8 +98,8 @@ public class NavActivity extends AppCompatActivity {
                         float pos_x = Float.valueOf(loc[0]);
                         float pos_y = Float.valueOf(loc[1]);
                         float scale = navMapView.getScale();
-                        pos_x = (MAP_TRANS + pos_x ) * MAP_PIXEL_SIZE / MAP_REAL_SIZE / scale;
-                        pos_y = (MAP_TRANS - pos_y) * MAP_PIXEL_SIZE / MAP_REAL_SIZE / scale;
+                        pos_x = (MAP_TRANS + pos_x) * (MAP_PIXEL_SIZE / MAP_REAL_SIZE) / scale;
+                        pos_y = (MAP_TRANS - pos_y) * (MAP_PIXEL_SIZE / MAP_REAL_SIZE) / scale;
                         navMapView.setRoboPos(pos_x, pos_y);
                     }
                 }catch (Exception e){
@@ -95,5 +107,22 @@ public class NavActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    public class LoadHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 2 : {
+                    velText.setText((String)msg.obj);
+                    break;
+                }
+                case 3 : {
+                    stateText.setText((String)msg.obj);
+                    break;
+                }
+            }
+        }
     }
 }

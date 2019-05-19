@@ -1,5 +1,8 @@
 package team.se.util;
 
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -7,8 +10,10 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import team.se.robotapp.NavActivity;
+import team.se.robotapp.NavMapView;
 import team.se.robotapp.R;
-import team.se.robotapp.ControActivity.LoadHandler;
+import team.se.robotapp.ControActivity;
 
 public class TransContro {
     private String HOST;
@@ -21,18 +26,32 @@ public class TransContro {
     private static final String STOPMOVE = "STOPMOVE";
     private static final String STARTNAV = "STARTNAV";
     private static final long INTERVAL = 100000;
-    private LoadHandler handler;
+    private ControActivity.LoadHandler controHandler;
+    private NavActivity.LoadHandler navHandler;
+    private static boolean EXIT;
 
-    public TransContro(String HOST, int PORT, LoadHandler handler){
+    public TransContro(String HOST, int PORT, ControActivity.LoadHandler handler){
         this.HOST = HOST;
         this.PORT = PORT;
         pre_contro = "";
-        this.handler = handler;
+        this.controHandler = handler;
+        this.navHandler = null;
+        EXIT = false;
+    }
+
+    public TransContro(String HOST, int PORT, NavActivity.LoadHandler handler){
+        this.HOST = HOST;
+        this.PORT = PORT;
+        pre_contro = "";
+        this.controHandler = null;
+        this.navHandler = handler;
+        EXIT = false;
     }
 
     public TransContro(String HOST, int PORT){
         this.HOST = HOST;
         this.PORT = PORT;
+        EXIT = false;
     }
 
     public void moveForward(){
@@ -97,14 +116,20 @@ public class TransContro {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true){
+                while (!EXIT){
                     try{
                         Socket socket = new Socket(HOST, PORT);
                         //conStateText.setText(R.string.State_Con);
-                        handler.obtainMessage(3,"State : Connected").sendToTarget();
+                        if (controHandler != null)
+                            controHandler.obtainMessage(3,"State : Connected").sendToTarget();
+                        else if (navHandler != null)
+                            navHandler.obtainMessage(3,"State : Connected").sendToTarget();
                     }catch (Exception e){
                         //conStateText.setText(R.string.State_Out);
-                        handler.obtainMessage(3,"State : Offline").sendToTarget();
+                        if (controHandler != null)
+                            controHandler.obtainMessage(3,"State : Offline").sendToTarget();
+                        else if (navHandler != null)
+                            navHandler.obtainMessage(3,"State : Offline").sendToTarget();
                         e.printStackTrace();
                     }
                     try{
@@ -115,5 +140,9 @@ public class TransContro {
                 }
             }
         }).start();
+    }
+
+    public void stopCon(){
+        EXIT = true;
     }
 }

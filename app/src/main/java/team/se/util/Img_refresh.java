@@ -19,21 +19,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
 import team.se.robotapp.ControActivity.LoadHandler;
-
+import team.se.robotapp.NavMapView;
 
 
 public class Img_refresh {
     private static String Host;
     private static int Port;
     private static boolean EXIT;
-    private static LoadHandler loadHandler;
+    private LoadHandler loadHandler;
     private static Socket socket;
+    private NavMapView navMapView;
+    private int width;
+    private int height;
+    private Bitmap.Config config;
 
     public Img_refresh(String host, int port, LoadHandler _loadhandler){
         this.Host = host;
         this.Port = port;
         this.EXIT = false;
-        loadHandler = _loadhandler;
+        this.loadHandler = _loadhandler;
+        this.navMapView = null;
+        this.config = Bitmap.Config.RGB_565;
+        width = 720;
+        height = 480;
+    }
+
+    public Img_refresh(String host, int port, NavMapView navMapView){
+        this.Host = host;
+        this.Port = port;
+        this.EXIT = false;
+        this.navMapView = navMapView;
+        this.loadHandler = null;
+        this.config = Bitmap.Config.ARGB_8888;
+        width = 992;
+        height = 992;
     }
 
     public void accpetServer(){
@@ -45,9 +64,7 @@ public class Img_refresh {
 
                     InputStream inputStream = socket.getInputStream();
 
-
-                    int width=720,height=480;
-                    Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.RGB_565);
+                    Bitmap bitmap = Bitmap.createBitmap(width,height, config);
 
                     byte[] bytes = new byte[10000000];
                     int length, off=0;
@@ -56,12 +73,15 @@ public class Img_refresh {
 
                     while ((length=inputStream.read(bytes,off,1000))!=-1 && !EXIT){
                         off=off+length;
-                        if(off>=1382400){
-                            off=off-1382400;
+                        if(off>=width * height * 4){
+                            off=off-width * height * 4;
                             System.out.println("time : "+System.currentTimeMillis());
 
-                            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes,0,1382400));
-                            loadHandler.obtainMessage(0,bitmap).sendToTarget();
+                            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes,0,width * height * 4));
+                            if (loadHandler != null)
+                                loadHandler.obtainMessage(0,bitmap).sendToTarget();
+                            else if (navMapView != null)
+                                navMapView.setMap(bitmap);
                         }
                     }
 

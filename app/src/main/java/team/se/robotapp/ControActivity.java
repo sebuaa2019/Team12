@@ -61,8 +61,8 @@ public class ControActivity extends AppCompatActivity {
         speedText = (TextView)findViewById(R.id.speedText);
         conStateText = (TextView)findViewById(R.id.conStateText);
 
-        Info_refresh info_refresh = new Info_refresh(HOST, INFO_PORT);
-        info_refresh.acceptServer(speedText,loadHandler);
+        Info_refresh info_refresh = new Info_refresh(HOST, INFO_PORT, loadHandler);
+        info_refresh.acceptServer();
         transContro = new TransContro(HOST, Integer.valueOf(addr[1]), loadHandler);
         transContro.checkCon();
 
@@ -75,6 +75,7 @@ public class ControActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 map_refresh.stopRecv();
+                transContro.stopCon();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
