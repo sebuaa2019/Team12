@@ -18,10 +18,28 @@
         android:id="@+id/buttonNav"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="200dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nav"/>
+
+    <Button
+        android:id="@+id/displayCam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="400dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/displayCam"/>
+
+    <Button
+        android:id="@+id/displayMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="600dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/displayMap"/>
 
     <ImageView
         android:id="@+id/camImage"

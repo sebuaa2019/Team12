@@ -7,4 +7,6 @@
     <string name="State_Con">State : Connected</string>
     <string name="State_Out">State : Offline</string>
     <string name="startNav">Start Navigation</string>
+    <string name="displayCam">Camera</string>
+    <string name="displayMap">ScanMap</string>
 </resources>

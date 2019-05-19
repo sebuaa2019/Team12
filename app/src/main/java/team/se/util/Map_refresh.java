@@ -15,11 +15,20 @@ public class Map_refresh {
     private static String Host;
     private static int port;
     private static NavMapView navMapView;
+    private static ControActivity.LoadHandler loadHandler;
 
-    public  Map_refresh(String Host, int port, NavMapView navMapView){
-        this.Host = Host;
-        this.port = port;
-        this.navMapView = navMapView;
+    public  Map_refresh(String _Host, int _port, NavMapView _navMapView){
+        Host = _Host;
+        port = _port;
+        navMapView = _navMapView;
+        loadHandler = null;
+    }
+
+    public Map_refresh(String _Host, int _port, ControActivity.LoadHandler handler){
+        Host = _Host;
+        port = _port;
+        loadHandler = handler;
+        navMapView = null;
     }
 
     public void accpetServer(){
@@ -66,7 +75,10 @@ public class Map_refresh {
                             }
 
                             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes2,0,984064*4));
-                            navMapView.setMap(bitmap);
+                            if (navMapView != null)
+                                navMapView.setMap(bitmap);
+                            else if (loadHandler != null)
+                                loadHandler.obtainMessage(1, bitmap);
                         }
                     }
                     socket.close();

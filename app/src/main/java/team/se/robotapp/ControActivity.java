@@ -35,6 +35,9 @@ public class ControActivity extends AppCompatActivity {
     private static TextView speedText;
     private static TextView conStateText;
     private static TextView locText;
+    private static int Switch = 0;
+    private static final int DISPLAYCAM = 0;
+    private static final int DISPLAYMAP = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +61,27 @@ public class ControActivity extends AppCompatActivity {
         transContro = new TransContro(HOST, Integer.valueOf(addr[1]), loadHandler);
         transContro.checkCon();
 
-        Button button = (Button)findViewById(R.id.buttonNav);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button navButton = (Button)findViewById(R.id.buttonNav);
+        Button camButton = (Button)findViewById(R.id.displayCam);
+        Button mapButton = (Button)findViewById(R.id.displayMap);
+        navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ControActivity.this, NavActivity.class);
                 intent.putExtra("addr", addr[0] + "|" + addr[1]);
                 startActivity(intent);
+            }
+        });
+        camButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch = DISPLAYCAM;
+            }
+        });
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch = DISPLAYMAP;
             }
         });
 
@@ -108,9 +125,12 @@ public class ControActivity extends AppCompatActivity {
             //          super.handleMessage(msg);
             switch (msg.what){
                 case 0:
-                    imageView.setImageBitmap((Bitmap)msg.obj);
+                    if (Switch == DISPLAYCAM)
+                        imageView.setImageBitmap((Bitmap)msg.obj);
                     break;
                 case 1:
+                    if (Switch == DISPLAYMAP)
+                        imageView.setImageBitmap((Bitmap)msg.obj);
                     break;
                 case 2:
                     speedText.setText((String)msg.obj);
