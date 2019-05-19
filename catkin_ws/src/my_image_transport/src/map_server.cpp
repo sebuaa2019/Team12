@@ -47,11 +47,14 @@ void call_back(const nav_msgs::OccupancyGrid::ConstPtr &msg){
 
 
 	uchar* send_buffer = new uchar[width*height];
-	int i;
-
-	for(i=0;i<width*height;i++){
+	int i,j;
+	int num=0;
+	for(i=height-1;i>=0;i--){
 	//	if(msg->data[i]!=-1) printf("%d ",msg->data[i]);
-		send_buffer[i]=(uchar)(msg->data[i]);
+		for(j=0;j<width;j++){
+			int k=i*width;
+			send_buffer[num++]=(uchar)(msg->data[k+j]);
+		}
 	}
 		
 

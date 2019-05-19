@@ -125,6 +125,9 @@ include_directories(
 add_executable(Socket_Server src/Socket_Server.cpp)
 target_link_libraries(Socket_Server ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
+add_executable(image_map src/image_map.cpp)
+target_link_libraries(image_map ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
 add_executable(Socket_Img src/Socket_Img.cpp)
 target_link_libraries(Socket_Img ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
