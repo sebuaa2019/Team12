@@ -19,6 +19,7 @@ import java.net.Socket;
 
 import team.se.util.Img_refresh;
 import team.se.util.Info_refresh;
+import team.se.util.Map_refresh;
 import team.se.util.TransContro;
 
 public class ControActivity extends AppCompatActivity {
@@ -29,6 +30,7 @@ public class ControActivity extends AppCompatActivity {
     private static final int RIGHT = 2;
     private static final int LEFT = 3;
     private static final int IMG_PORT = 1999;
+    private static final int MAP_PORT = 2003;
     private static final int INFO_PORT = 2000;
     private static String HOST;
     private static ImageView imageView;
@@ -60,6 +62,9 @@ public class ControActivity extends AppCompatActivity {
         info_refresh.acceptServer(speedText,loadHandler);
         transContro = new TransContro(HOST, Integer.valueOf(addr[1]), loadHandler);
         transContro.checkCon();
+
+        Map_refresh map_refresh = new Map_refresh(HOST, MAP_PORT, loadHandler);
+        map_refresh.accpetServer();
 
         Button navButton = (Button)findViewById(R.id.buttonNav);
         Button camButton = (Button)findViewById(R.id.displayCam);
@@ -138,7 +143,6 @@ public class ControActivity extends AppCompatActivity {
                     conStateText.setText((String)msg.obj);
                     break;
             }
-
         }
     }
 }
