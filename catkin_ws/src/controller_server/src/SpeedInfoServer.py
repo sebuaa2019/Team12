@@ -13,6 +13,7 @@ class SpeedInfoServer:
     def sendtoclient(self, msg):
         x = ('%.3f' % abs(msg.linear.x))
         z = ('%.3f' % abs(msg.angular.z))
+        print(str(x) + " " + str(z))
         if ((x > 0 or z > 0)):
             try:
                 self.con.send("("+str(x)+","+str(z)+")")

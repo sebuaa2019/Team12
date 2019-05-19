@@ -16,12 +16,14 @@ public class Info_refresh {
     private static final int ByteLen = 2048;
     private ControActivity.LoadHandler controHandler;
     private NavActivity.LoadHandler navHandler;
+    private boolean EXIT;
 
     public Info_refresh(String host, int port, ControActivity.LoadHandler loadHandler) {
         Host = host;
         Port = port;
         controHandler = loadHandler;
         navHandler = null;
+        EXIT = false;
     }
 
     public Info_refresh(String host, int port, NavActivity.LoadHandler loadHandler) {
@@ -29,6 +31,7 @@ public class Info_refresh {
         Port = port;
         controHandler = null;
         navHandler = loadHandler;
+        EXIT = false;
     }
 
     public void acceptServer() {
@@ -41,7 +44,7 @@ public class Info_refresh {
 
                     byte[] bytes = new byte[ByteLen];
                     int length = 0;
-                    while ((length = inputStream.read(bytes,0,20))!=-1){
+                    while ((length = inputStream.read(bytes,0,20))!=-1 && !EXIT){
                         String msg = new String(bytes);
      //                   System.out.println("length is"+length);
       //                  Log.d("INFO", msg);
@@ -55,5 +58,9 @@ public class Info_refresh {
                 }
             }
         }).start();
+    }
+
+    public void stopRecv(){
+        this.EXIT = true;
     }
 }

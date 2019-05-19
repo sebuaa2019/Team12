@@ -43,7 +43,7 @@ public class ControActivity extends AppCompatActivity {
     private static int Switch = 0;
     private static final int DISPLAYCAM = 0;
     private static final int DISPLAYMAP = 1;
-    private static final String STOPRECV = "STOPRECV";
+    private static final String RECVLOC = "RECVLOC";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class ControActivity extends AppCompatActivity {
         speedText = (TextView)findViewById(R.id.speedText);
         conStateText = (TextView)findViewById(R.id.conStateText);
 
-        Info_refresh info_refresh = new Info_refresh(HOST, INFO_PORT, loadHandler);
+        final Info_refresh info_refresh = new Info_refresh(HOST, INFO_PORT, loadHandler);
         info_refresh.acceptServer();
         transContro = new TransContro(HOST, Integer.valueOf(addr[1]), loadHandler);
         transContro.checkCon();
@@ -75,6 +75,7 @@ public class ControActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 map_refresh.stopRecv();
+                info_refresh.stopRecv();
                 transContro.stopCon();
                 new Thread(new Runnable() {
                     @Override
@@ -82,7 +83,7 @@ public class ControActivity extends AppCompatActivity {
                         try{
                             Socket socket = new Socket(HOST, Integer.valueOf(addr[1]));
                             OutputStream outputStream = socket.getOutputStream();
-                            outputStream.write(STOPRECV.getBytes());
+                            outputStream.write(RECVLOC.getBytes());
                         }catch (Exception e){
                             e.printStackTrace();
                         }

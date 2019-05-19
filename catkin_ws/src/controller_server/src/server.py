@@ -16,16 +16,14 @@ LOC_REF_PORT = 2001
 SIGNAL = ['FORWARD', 'BACKWARD', 'TURNLEFT', 'TURNRIGHT']
 STOPMOVE = 'STOPMOVE'
 STARTNAV = 'STARTNAV'
-STOPRECV = 'STOPRECV'
+RECVLOC = 'RECVLOC'
 
 if __name__ == '__main__':
     rospy.init_node('server')
     pub = rospy.Publisher('control_signal', control_signal, queue_size=1)
     soc = socket.socket()
     soc.bind((HOST, CONTRO_PORT))
-    speedInfoServer = SpeedInfoServer(HOST, INFO_PORT)
-    thread.start_new_thread(speedInfoServer.start, ('INFO-Server-Thread', ))
-    thread.start_new_thread(LocServer(HOST, LOC_REF_PORT).start, ('LOC-Server-Thread', ))
+    thread.start_new_thread(SpeedInfoServer(HOST, INFO_PORT).start, ('INFO-Server-Thread', ))
     navServer = NavServer()
     print('Server Online!')
     soc.listen(5)
@@ -37,14 +35,14 @@ if __name__ == '__main__':
             pub.publish(control_signal(data, False))
         elif (data == STOPMOVE):
             pub.publish(control_signal(data, True))
-        elif (data == STOPRECV):
-            print('Connection Closed')
-            speedInfoServer.stop()
+        elif (data == RECVLOC):
+            thread.start_new_thread(LocServer(HOST, LOC_REF_PORT).start, ('LOC-Server-Thread', ))
         elif (',' in data):
             pos = filter(lambda x : x, re.split('[^\w.-]', data))
             pos_X = float(pos[0])
             pos_Y = float(pos[1])
             ori_W = float(pos[2])
+            print(str(pos_X) + " " + str(pos_Y))
             navServer.append_waypoint(pos_X, pos_Y, ori_W)
         elif (data == STARTNAV):
             navServer.start()
