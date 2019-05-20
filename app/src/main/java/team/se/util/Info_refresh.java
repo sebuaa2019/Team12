@@ -46,13 +46,15 @@ public class Info_refresh {
                     int length = 0;
                     while ((length = inputStream.read(bytes,0,20))!=-1 && !EXIT){
                         String msg = new String(bytes);
+
      //                   System.out.println("length is"+length);
-      //                  Log.d("INFO", msg);
+                        Log.d("VEL_INFO", msg);
                         if (controHandler != null)
                             controHandler.obtainMessage(2,msg.substring(0,13)).sendToTarget();
                         else if (navHandler != null)
                             navHandler.obtainMessage(2,msg.substring(0,13)).sendToTarget();
                     }
+                    socket.close();
                 }catch (Exception e){
                     e.printStackTrace();
                 }

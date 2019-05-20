@@ -4,45 +4,36 @@ import socket
 import rospy
 import thread
 import re
-from SpeedInfoServer import SpeedInfoServer
-from NavServer import NavServer
 from controller_server.msg import control_signal
-from LocServer import LocServer
+from NavServer import NavServer
 
-HOST = '192.168.137.19'
-CONTRO_PORT = 1989
-INFO_PORT = 2000
-LOC_REF_PORT = 2001
 SIGNAL = ['FORWARD', 'BACKWARD', 'TURNLEFT', 'TURNRIGHT']
 STOPMOVE = 'STOPMOVE'
 STARTNAV = 'STARTNAV'
-RECVLOC = 'RECVLOC'
 
 if __name__ == '__main__':
-    rospy.init_node('server')
+    HOST = rospy.get_param('HOST')
+    Server_Port = rospy.get_param('Server_Port')
+    rospy.init_node('main_server')
     pub = rospy.Publisher('control_signal', control_signal, queue_size=1)
     soc = socket.socket()
-    soc.bind((HOST, CONTRO_PORT))
-    thread.start_new_thread(SpeedInfoServer(HOST, INFO_PORT).start, ('INFO-Server-Thread', ))
+    soc.bind((HOST, Server_Port))
     navServer = NavServer()
-    print('Server Online!')
+    print('Main-Server Online!')
     soc.listen(5)
     while (True):
         conn, addr = soc.accept()
+        print("Main-Server >> Connection From : " + addr)
         data = conn.recv(1024)
-        print(data)
         if (data in SIGNAL):
             pub.publish(control_signal(data, False))
         elif (data == STOPMOVE):
             pub.publish(control_signal(data, True))
-        elif (data == RECVLOC):
-            thread.start_new_thread(LocServer(HOST, LOC_REF_PORT).start, ('LOC-Server-Thread', ))
         elif (',' in data):
             pos = filter(lambda x : x, re.split('[^\w.-]', data))
             pos_X = float(pos[0])
             pos_Y = float(pos[1])
             ori_W = float(pos[2])
-            print(str(pos_X) + " " + str(pos_Y))
             navServer.append_waypoint(pos_X, pos_Y, ori_W)
         elif (data == STARTNAV):
-            navServer.start()
+            navServer.start(conn)

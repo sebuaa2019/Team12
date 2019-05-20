@@ -65,13 +65,14 @@ public class NavActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     float pos_x = event.getX();
                     float pos_y = event.getY();
+                    Log.d("Click_Pos", String.valueOf(pos_x) + " " + String.valueOf(pos_y));
                     float scale = navMapView.getScale();
                     navMapView.addTarPos(pos_x, pos_y);
                     pos_x = pos_x * scale;
                     pos_y = pos_y * scale;
                     pos_x = pos_x / MAP_PIXEL_SIZE * MAP_REAL_SIZE - MAP_TRANS;
                     pos_y = MAP_TRANS - pos_y / MAP_PIXEL_SIZE * MAP_REAL_SIZE;
-                    Log.d("NavMapViewClick", String.valueOf(pos_x) + "|" + String.valueOf(pos_y));
+                    Log.d("Real_Pos", String.valueOf(pos_x) + " " + String.valueOf(pos_y));
                     transContro.sendTarget(pos_x, pos_y);
                 }
                 return true;
@@ -94,13 +95,18 @@ public class NavActivity extends AppCompatActivity {
 
                     byte[] bytes = new byte[1024];
                     int length = 0;
-                    while ((length = inputStream.read(bytes,0,20))!=-1){
-                        String[] loc = new String(bytes).split(",");
-                        float pos_x = Float.valueOf(loc[0]);
-                        float pos_y = Float.valueOf(loc[1]);
+                    while ((length = inputStream.read(bytes,0,15))!=-1){
+                        String loc = new String(bytes);
+                        Log.d("Robot_Pos_Real", loc);
+                        float pos_x = Float.valueOf(loc.split(",")[0]);
+                        float pos_y = Float.valueOf(loc.split(",")[1]);
+                        Log.d("Float_Pos", String.valueOf(pos_x) + " " + String.valueOf(pos_y));
+                        while (!navMapView.mapReady());
                         float scale = navMapView.getScale();
-                        pos_x = (MAP_TRANS + pos_x) * (MAP_PIXEL_SIZE / MAP_REAL_SIZE) / scale;
-                        pos_y = (MAP_TRANS - pos_y) * (MAP_PIXEL_SIZE / MAP_REAL_SIZE) / scale;
+                        Log.d("Scale", String.valueOf(scale));
+                        pos_x = (MAP_TRANS + pos_x) * ((float) MAP_PIXEL_SIZE / MAP_REAL_SIZE) / scale;
+                        pos_y = (MAP_TRANS - pos_y) * ((float) MAP_PIXEL_SIZE / MAP_REAL_SIZE) / scale;
+                        Log.d("Robot_Pos_Pixel", String.valueOf(pos_x) + " " + String.valueOf(pos_y));
                         navMapView.setRoboPos(pos_x, pos_y);
                     }
                 }catch (Exception e){

@@ -28,11 +28,10 @@ def pub_vel(thread_name):
     pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
     while (rospy.is_shutdown() == False):
         pub.publish(twist)
-	print(twist)
         rate.sleep()
 
 if __name__ == '__main__':
-    rospy.init_node('controller')
+    rospy.init_node('contro_server')
     rospy.Subscriber('control_signal', control_signal, callback)
     thread.start_new_thread(pub_vel, ("pub_vel_thread",))
     rospy.spin()

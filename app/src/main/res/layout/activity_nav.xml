@@ -8,8 +8,9 @@
 
     <team.se.robotapp.NavMapView
         android:id="@+id/navMap"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_width="380dp"
+        android:layout_height="380dp"
+        android:layout_alignParentTop="true"
         android:layout_centerInParent="true"/>
 
     <Button

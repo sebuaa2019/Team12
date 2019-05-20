@@ -6,16 +6,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 
 import java.lang.reflect.Array;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
 
-public class NavMapView extends View {
+public class NavMapView extends AppCompatImageView {
 
     private Bitmap map;
     private Bitmap roboBitmap;
@@ -29,34 +31,33 @@ public class NavMapView extends View {
     private static float viewWidth;
     private static float viewHeight;
     private static float scale;
+    private static boolean isMapReady = false;
 
     public NavMapView(Context context, AttributeSet attributeSet){
         super(context, attributeSet);
-        this.map = BitmapFactory.decodeResource(getResources(), R.mipmap.map).copy(Bitmap.Config.RGB_565, true);
-        //this.map = Bitmap.createBitmap(this.map, 0, 0, this.map.getWidth(), this.map.getHeight(), matrix, true);
+        //this.map = BitmapFactory.decodeResource(getResources(), R.mipmap.map).copy(Bitmap.Config.RGB_565, true);
+        this.map = null;
         this.roboBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.robot_pos);
         this.tarBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.target_pos);
 
         getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                getViewTreeObserver().removeOnPreDrawListener(this);
-                viewWidth = getWidth();
-                viewHeight = getHeight();
-                roboPos_X = viewWidth / 2;
-                roboPos_Y = viewHeight / 2;
-                //Log.d("WIDTH", String.valueOf(viewHeight) + " " + String.valueOf(viewWidth));
-                //Log.d("Density", String.valueOf(getResources().getDisplayMetrics().density) + " " + String.valueOf(map.getHeight()));
-                scale = (float) map.getHeight() / getResources().getDisplayMetrics().density / viewHeight * 2;
+                if (map != null) {
+                    viewWidth = getWidth();
+                    viewHeight = getHeight();
+                    Log.d("ViewSize", String.valueOf(viewWidth) + " " + String.valueOf(viewHeight));
+                    roboPos_X = viewWidth / 2;
+                    roboPos_Y = viewHeight / 2;
+                    Log.d("MapSize", String.valueOf(map.getWidth()) + " " + String.valueOf(map.getHeight()));
+                    Log.d("Density", String.valueOf(getResources().getDisplayMetrics().density));
+                    scale = (float) map.getHeight() / viewHeight;
+                    Log.d("Scale", String.valueOf(scale));
+                    getViewTreeObserver().removeOnPreDrawListener(this);
+                }
                 return true;
             }
         });
-
-        roboPos_r = 10.0f;
-        tarPos_r = 10.0f;
-
-        tarPos_X = new ArrayList<Float>();
-        tarPos_Y = new ArrayList<Float>();
 
         new Thread(new Runnable() {
             @Override
@@ -71,34 +72,42 @@ public class NavMapView extends View {
                 }
             }
         }).start();
+
+        roboPos_r = 10.0f;
+        tarPos_r = 10.0f;
+
+        tarPos_X = new ArrayList<Float>();
+        tarPos_Y = new ArrayList<Float>();
     }
 
     protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
-        canvas.drawBitmap(map, null, new Rect(
-                0, 0, (int)viewHeight, (int)viewWidth
-        ), null);
-        canvas.drawBitmap(roboBitmap, null, new Rect(
-                (int)(roboPos_X - roboPos_r),
-                (int)(roboPos_Y - roboPos_r),
-                (int)(roboPos_X + roboPos_r),
-                (int)(roboPos_Y + roboPos_r)
-        ), null);
-
-        for (int i = 0 ; i < tarPos_X.size() ; i++){
-            float tarPos_x = tarPos_X.get(i);
-            float tarPos_y = tarPos_Y.get(i);
-            canvas.drawBitmap(tarBitmap, null, new Rect(
-                    (int)(tarPos_x - tarPos_r),
-                    (int)(tarPos_y - 2 * tarPos_r),
-                    (int)(tarPos_x + tarPos_r),
-                    (int)(tarPos_y)
+        if (this.map != null) {
+            canvas.drawBitmap(map, null, new Rect(
+                    0, 0, (int) viewHeight, (int) viewWidth
             ), null);
+            canvas.drawBitmap(roboBitmap, null, new Rect(
+                    (int) (roboPos_X - roboPos_r),
+                    (int) (roboPos_Y - roboPos_r),
+                    (int) (roboPos_X + roboPos_r),
+                    (int) (roboPos_Y + roboPos_r)
+            ), null);
+
+            for (int i = 0; i < tarPos_X.size(); i++) {
+                float tarPos_x = tarPos_X.get(i);
+                float tarPos_y = tarPos_Y.get(i);
+                canvas.drawBitmap(tarBitmap, null, new Rect(
+                        (int) (tarPos_x - tarPos_r),
+                        (int) (tarPos_y - 2 * tarPos_r),
+                        (int) (tarPos_x + tarPos_r),
+                        (int) (tarPos_y)
+                ), null);
+            }
+            isMapReady = true;
         }
     }
 
     public void setRoboPos(float roboPos_x, float roboPos_y){
-        Log.d("NavView", String.valueOf(roboPos_X) + "|" + String.valueOf(roboPos_Y) + "|" + String.valueOf(roboPos_r));
         roboPos_X = roboPos_x;
         roboPos_Y = roboPos_y;
     }
@@ -119,5 +128,9 @@ public class NavMapView extends View {
 
     public float getScale(){
         return scale;
+    }
+
+    public boolean mapReady(){
+        return isMapReady;
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.io.BufferedWriter;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
@@ -25,6 +26,7 @@ public class TransContro {
     private static final String TURNRIGHT = "TURNRIGHT";
     private static final String STOPMOVE = "STOPMOVE";
     private static final String STARTNAV = "STARTNAV";
+    private static final String TRANSMSG = "MSG";
     private static final long INTERVAL = 100000;
     private ControActivity.LoadHandler controHandler;
     private NavActivity.LoadHandler navHandler;
@@ -119,11 +121,14 @@ public class TransContro {
                 while (!EXIT){
                     try{
                         Socket socket = new Socket(HOST, PORT);
+                        //OutputStream outputStream = socket.getOutputStream();
+                        //outputStream.write(TRANSMSG.getBytes());
                         //conStateText.setText(R.string.State_Con);
                         if (controHandler != null)
                             controHandler.obtainMessage(3,"State : Connected").sendToTarget();
                         else if (navHandler != null)
                             navHandler.obtainMessage(3,"State : Connected").sendToTarget();
+                        socket.close();
                     }catch (Exception e){
                         //conStateText.setText(R.string.State_Out);
                         if (controHandler != null)

@@ -21,12 +21,12 @@ class NavServer:
         waypoint = self.__wrap_waypoint(pos_X, pos_Y, ori_W)
         self.waypoint_list.append(waypoint)
 
-    def start(self):
+    def start(self, conn):
         print('Start Navigation')
         while (self.client.wait_for_server(rospy.Duration(5.0)) == False):
             print('Waiting for move_base server to come up')
             return
-        for waypoint in self.waypoint_list:
+        for i, waypoint in enumerate(self.waypoint_list):
             pos_X = waypoint.target_pose.pose.position.x
             pos_Y = waypoint.target_pose.pose.position.y
             print('Go to Waypoint ( %f, %f )'%(pos_X, pos_Y))
@@ -34,5 +34,7 @@ class NavServer:
             self.client.wait_for_result()
             if (self.client.get_state() == actionlib.GoalStatus.SUCCEEDED):
                 print('Arrived at Waypoint ( %f, %f )'%(pos_X, pos_Y))
+                conn.send(str(i))
+                self.waypoint_list.remove(waypoint)
             else:
                 print('Failed to get to Waypoint ( %f, %f )'%(pos_X, pos_Y))

@@ -77,6 +77,7 @@ public class ControActivity extends AppCompatActivity {
                 map_refresh.stopRecv();
                 info_refresh.stopRecv();
                 transContro.stopCon();
+                /*
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -88,7 +89,7 @@ public class ControActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                }).start();
+                }).start();*/
                 Intent intent = new Intent(ControActivity.this, NavActivity.class);
                 intent.putExtra("addr", addr[0] + "|" + addr[1]);
                 startActivity(intent);
