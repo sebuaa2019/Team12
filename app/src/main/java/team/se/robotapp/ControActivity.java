@@ -43,7 +43,7 @@ public class ControActivity extends AppCompatActivity {
     private static int Switch = 0;
     private static final int DISPLAYCAM = 0;
     private static final int DISPLAYMAP = 1;
-    private static final String RECVLOC = "RECVLOC";
+    private static final String SAVE_MAP_AND_NAV = "SAVE_MAP_AND_NAV";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +77,18 @@ public class ControActivity extends AppCompatActivity {
                 map_refresh.stopRecv();
                 info_refresh.stopRecv();
                 transContro.stopCon();
-                /*
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try{
                             Socket socket = new Socket(HOST, Integer.valueOf(addr[1]));
                             OutputStream outputStream = socket.getOutputStream();
-                            outputStream.write(RECVLOC.getBytes());
+                            outputStream.write(SAVE_MAP_AND_NAV.getBytes());
                         }catch (Exception e){
                             e.printStackTrace();
                         }
                     }
-                }).start();*/
+                }).start();
                 Intent intent = new Intent(ControActivity.this, NavActivity.class);
                 intent.putExtra("addr", addr[0] + "|" + addr[1]);
                 startActivity(intent);

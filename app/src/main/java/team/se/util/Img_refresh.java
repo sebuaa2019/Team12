@@ -51,8 +51,8 @@ public class Img_refresh {
         this.navMapView = navMapView;
         this.loadHandler = null;
         this.config = Bitmap.Config.ARGB_8888;
-        width = 992;
-        height = 992;
+        width = 256;
+        height = 256;
     }
 
     public void accpetServer(){
@@ -75,8 +75,6 @@ public class Img_refresh {
                         off=off+length;
                         if(off>=width * height * 4){
                             off=off-width * height * 4;
-                            System.out.println("time : "+System.currentTimeMillis());
-
                             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes,0,width * height * 4));
                             if (loadHandler != null)
                                 loadHandler.obtainMessage(0,bitmap).sendToTarget();
@@ -84,7 +82,6 @@ public class Img_refresh {
                                 navMapView.setMap(bitmap);
                         }
                     }
-
                     socket.close();
                 }catch (Exception e){
                     e.printStackTrace();

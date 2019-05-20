@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".NavActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
-        <activity android:name=".ControActivity" />
+        <activity android:name=".ControActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".ConnectActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

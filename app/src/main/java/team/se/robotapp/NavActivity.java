@@ -32,6 +32,7 @@ public class NavActivity extends AppCompatActivity {
     private static final int MAP_PIXEL_SIZE = 992;
     private static final int MAP_REAL_SIZE = 50;
     private static final int MAP_TRANS = 25;
+    private static final int CROP_SIZE = 368;
     private static TextView stateText;
     private static TextView velText;
 
@@ -68,8 +69,8 @@ public class NavActivity extends AppCompatActivity {
                     Log.d("Click_Pos", String.valueOf(pos_x) + " " + String.valueOf(pos_y));
                     float scale = navMapView.getScale();
                     navMapView.addTarPos(pos_x, pos_y);
-                    pos_x = pos_x * scale;
-                    pos_y = pos_y * scale;
+                    pos_x = pos_x * scale + CROP_SIZE;
+                    pos_y = pos_y * scale + CROP_SIZE;
                     pos_x = pos_x / MAP_PIXEL_SIZE * MAP_REAL_SIZE - MAP_TRANS;
                     pos_y = MAP_TRANS - pos_y / MAP_PIXEL_SIZE * MAP_REAL_SIZE;
                     Log.d("Real_Pos", String.valueOf(pos_x) + " " + String.valueOf(pos_y));
@@ -104,8 +105,8 @@ public class NavActivity extends AppCompatActivity {
                         while (!navMapView.mapReady());
                         float scale = navMapView.getScale();
                         Log.d("Scale", String.valueOf(scale));
-                        pos_x = (MAP_TRANS + pos_x) * ((float) MAP_PIXEL_SIZE / MAP_REAL_SIZE) / scale;
-                        pos_y = (MAP_TRANS - pos_y) * ((float) MAP_PIXEL_SIZE / MAP_REAL_SIZE) / scale;
+                        pos_x = ((MAP_TRANS + pos_x) * ((float) MAP_PIXEL_SIZE / MAP_REAL_SIZE) - CROP_SIZE) / scale;
+                        pos_y = ((MAP_TRANS - pos_y) * ((float) MAP_PIXEL_SIZE / MAP_REAL_SIZE) - CROP_SIZE) / scale;
                         Log.d("Robot_Pos_Pixel", String.valueOf(pos_x) + " " + String.valueOf(pos_y));
                         navMapView.setRoboPos(pos_x, pos_y);
                     }
