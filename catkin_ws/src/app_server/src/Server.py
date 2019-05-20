@@ -23,7 +23,7 @@ if __name__ == '__main__':
     soc.listen(5)
     while (True):
         conn, addr = soc.accept()
-        print("Main-Server >> Connection From : " + addr)
+        print("Main-Server >> Connection From : " + addr[0])
         data = conn.recv(1024)
         if (data in SIGNAL):
             pub.publish(control_signal(data, False))

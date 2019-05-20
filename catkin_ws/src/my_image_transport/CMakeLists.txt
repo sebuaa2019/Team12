@@ -122,6 +122,16 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
+
+
+###
+
+
+###
+
+add_executable(auto_walk src/auto_walk.cpp)
+target_link_libraries(auto_walk ${catkin_LIBRARIES})
+
 add_executable(Socket_Server src/Socket_Server.cpp)
 target_link_libraries(Socket_Server ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
@@ -139,6 +149,8 @@ target_link_libraries(my_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 add_executable(map_server src/map_server.cpp)
 target_link_libraries(map_server ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -217,3 +229,4 @@ target_link_libraries(map_server ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+

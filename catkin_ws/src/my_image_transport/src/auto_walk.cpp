@@ -1,54 +1,57 @@
+#include "ros/ros.h"
+#include "sensor_msgs/LaserScan.h"
+#include "geometry_msgs/Twist.h"
 
+double angleMinLeft,distMinLeft,angleMinRight,distMinRight;
 
+ros::Publisher pub;
 
+void messageCallback(const sensor_msgs::LaserScan::ConstPtr& msg){
+    int size = msg->ranges.size();
+    //最小range左右索引值获取
+    int minIndexLeft = 0;
+    int minIndexRight = size/2;
 
-void subCallback(const sensor_msgs::LaserScan &LaserScan){
-    new_speed = new_turn_rate =0.0;
-    min_left_dist = get_min_distance_left(LaserScan);
-    min_right_dist = get_min_distance_right(LaserScan);
-
-    l = min_left_dist;
-    r = min_right_dist;
-    if(l>max_distance) l = max_distance;
-
-    if(r>max_distance) r = max_distance;
-    /*
-    if( l<max_distance || r<max_distance ){
-        if(abs(l-r) < force_turning_right_difference){   
-            r=r-100;  //
+    for(int i=0;i<size/2;i++){
+        if(msg->ranges[i] < msg->ranges[minIndexRight] && msg->ranges[i]>0.1){ // 0.1m 以上 最小
+            minIndexRight = i;
         }
     }
-    */
-    if( ){
-        new_speed = (r+l)/speed_ratio;
+    for(int i=size/2;i<size;i++){
+        if(msg->ranges[i] < msg->ranges[minIndexLeft] && msg->ranges[i]>0.1){
+            minIndexLeft = i;
+        }
     }
-    else{
-        new_speed = 0.0;
+    //计算左右两边最小距离 角度
+    angleMinLeft =( minIndexLeft - size/2 ) * msg->angle_increment;
+    distMinLeft = msg->ranges[minIndexLeft];
+    angleMinRight = (minIndexRight - size/2) * msg->angle_increment;
+    distMinRight = msg->ranges[minIndexRight];
+
+    geometry_msgs::Twist speed;
+    
+    //设置机器人运动角度 速度 （选择距离
+    speed.angular.z = distMinLeft < distMinRight? -(2*distMinRight/distMinLeft-2) :  (2*distMinLeft/distMinRight - 2) ;
+    speed.linear.x = 0.10;
+
+    if( distMinLeft<0.25 && distMinRight<0.25 && angleMinLeft <0.7 && angleMinRight <0.7){
+        speed.angular.z *= 50;
+        speed.linear.x *=0.5; 
     }
-    new_speed = limit(new_speed,-max_speed,max_speed);
-
-    cmd_vel.linear.x = new_speed;
-    cmd_vel.linear.y = 0.0;
-    cmd_vel.linear.z = 0.0;
-    cmd_vel.angular.x = 0.0;
-    cmd_vel.angular.y = 0.0;
-    cmd_vel.angular.z = new_turn_rate;
-
-    cmd_vel_pub.Publisher(cmd_vel);
-
+    pub.publish(speed);
 }
 
 
-int int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     /* code for main function */
     ros::init(argc, argv, "auto_walk");
-    ros:NodeHandle nh;
-
-    ros::Publisher pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
+    ros::NodeHandle n;
     
-    ros::Subscriber sub = nh.subscribe("/scan", 10, subCallback);
-    
+    pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 100);
 
+    ros::Subscriber sub = n.subscribe("/scan", 1, messageCallback);
+    ros::spin();
+  
     return 0;
 }
