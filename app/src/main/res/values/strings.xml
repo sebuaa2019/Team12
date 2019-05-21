@@ -1,4 +1,10 @@
 <resources>
+    <string name="anno_ip">IP</string>
+    <string name="anno_port">PORT</string>
+    <string name="anno_Con">Connect</string>
+    <string name="context_ip">192.168.137.19</string>
+    <string name="context_port">1989</string>
+    <string name="isCon">Can not connect</string>
     <string name="app_name">Robot App</string>
     <string name="conn_failed">Failed to Connect Robot</string>
     <string name="nav">Navigation</string>

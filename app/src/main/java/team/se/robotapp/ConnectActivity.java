@@ -40,7 +40,9 @@ public class ConnectActivity extends AppCompatActivity {
                             intent.putExtra("addr", host + "|" + port);
                             startActivity(intent);
                         }catch (Exception e){
-                            e.printStackTrace();
+                            //e.printStackTrace();
+                            Toast.makeText(ConnectActivity.this,"Can not connect",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).start();
