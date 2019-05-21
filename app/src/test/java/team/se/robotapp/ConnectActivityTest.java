@@ -24,6 +24,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadow.api.Shadow;
+import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowLog;
 import org.robolectric.shadows.ShadowProgressDialog;
 import org.robolectric.shadows.ShadowToast;
@@ -84,26 +85,8 @@ public class ConnectActivityTest {
     public void button_click_success() {
         ConnectActivity activity = Robolectric.setupActivity(ConnectActivity.class);
         activity.findViewById(R.id.buttonConn).performClick();
-        Intent expectedIntent = new Intent(sampleActivity, LoginActivity.class);
+        Intent expectedIntent = new Intent(activity, ControActivity.class);
         Intent actualIntent = ShadowApplication.getInstance().getNextStartedActivity();
             assertEquals(expectedIntent, actualIntent);
         }
-    }
-    /*
-
-
-    @Test
-    public void btn2_click() {
-        MainContract.Presenter presenter = Mockito.mock(MainContract.Presenter.class);
-        PowerMockito.when(PresenterFactory.create(Mockito.any(MainContract.View.class), Mockito.any(AppExecutors.class)))
-                .thenReturn(presenter);
-
-        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
-
-        activity.findViewById(R.id.btn_2).performClick();
-
-        Mockito.verify(presenter, Mockito.times(1))
-                .fetch();
-    }
-    */
 }
