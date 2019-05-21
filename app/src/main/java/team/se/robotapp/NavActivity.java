@@ -29,10 +29,10 @@ public class NavActivity extends AppCompatActivity {
     private static final int INFO_PORT = 2000;
     private static int LOC_REF_PORT = 2001;
     private static int MAP_PORT = 2004;
-    private static final int MAP_PIXEL_SIZE = 992;
-    private static final int MAP_REAL_SIZE = 50;
-    private static final int MAP_TRANS = 25;
-    private static final int CROP_SIZE = 368;
+    private static final int MAP_PIXEL_SIZE = 4000;
+    private static final int MAP_REAL_SIZE = 200;
+    private static final int MAP_TRANS = 100;
+    private static final int CROP_SIZE = 1872;
     private static TextView stateText;
     private static TextView velText;
 
