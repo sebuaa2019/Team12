@@ -44,7 +44,6 @@ import static org.junit.Assert.assertTrue;
 public class ConnectActivityTest {
 
 
-
     @Rule
     public PowerMockRule rule = new PowerMockRule();
     private Context appContext;
@@ -62,15 +61,15 @@ public class ConnectActivityTest {
     public void onCreate() {
         ConnectActivity activity = Robolectric.buildActivity(ConnectActivity.class).create().get();
         String textip = appContext.getString(R.string.anno_ip);
-        assertEquals(textip,((TextView)activity.findViewById(R.id.textViewIp)).getText());
+        assertEquals(textip, ((TextView) activity.findViewById(R.id.textViewIp)).getText());
         String textport = appContext.getString(R.string.anno_port);
-        assertEquals(textport,((TextView)activity.findViewById(R.id.textViewPort)).getText());
+        assertEquals(textport, ((TextView) activity.findViewById(R.id.textViewPort)).getText());
         String ip = appContext.getString(R.string.context_ip);
-        assertEquals(ip,((EditText)activity.findViewById(R.id.textViewPort)).getText());
+        assertEquals(ip, ((EditText) activity.findViewById(R.id.textViewPort)).getText());
         String port = appContext.getString(R.string.context_port);
-        assertEquals(port,((EditText)activity.findViewById(R.id.textViewPort)).getText());
+        assertEquals(port, ((EditText) activity.findViewById(R.id.textViewPort)).getText());
         String textcon = appContext.getString(R.string.anno_Con);
-        assertEquals(textcon,((Button)activity.findViewById(R.id.buttonConn)).getText());
+        assertEquals(textcon, ((Button) activity.findViewById(R.id.buttonConn)).getText());
     }
 
     @Test
@@ -87,6 +86,7 @@ public class ConnectActivityTest {
         activity.findViewById(R.id.buttonConn).performClick();
         Intent expectedIntent = new Intent(activity, ControActivity.class);
         Intent actualIntent = ShadowApplication.getInstance().getNextStartedActivity();
-            assertEquals(expectedIntent, actualIntent);
-        }
+        assertEquals(expectedIntent, actualIntent);
+    }
 }
+
