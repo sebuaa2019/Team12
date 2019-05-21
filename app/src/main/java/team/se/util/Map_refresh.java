@@ -37,7 +37,7 @@ public class Map_refresh {
     }
 
     public void accpetServer(){
-        int width=992,height=992;
+        final int width=256,height=256;
         final Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
         new Thread(new Runnable() {
             @Override
@@ -47,7 +47,7 @@ public class Map_refresh {
 
                     InputStream inputStream = socket.getInputStream();
 
-                    byte[] bytes = new byte[2000000];
+                    byte[] bytes = new byte[8000000];
                     byte[] bytes2 = new byte[8000000];
                     int length, off=0;
 
@@ -55,10 +55,9 @@ public class Map_refresh {
 
                     while ((length=inputStream.read(bytes,off,1000))!=-1 && !EXIT){
                         off=off+length;
-                        if(off>=984064){
-                            off=off-984064;
-                            System.out.println("time : "+System.currentTimeMillis());
-                            for(int i=0;i<984064;i++){
+                        if(off>=width * height){
+                //            System.out.println("time : "+System.currentTimeMillis());
+                            for(int i=0;i<width * height;i++){
                                     if(bytes[i]==-1){
                                         bytes2[i*4]=(byte)0x80;
                                         bytes2[i*4+1]=(byte)0x80;
@@ -79,11 +78,12 @@ public class Map_refresh {
                                     }
                             }
 
-                            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes2,0,984064*4));
+                            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(bytes2,0,width * height *4));
                             if (navMapView != null)
                                 navMapView.setMap(bitmap);
                             else if (loadHandler != null)
                                 loadHandler.obtainMessage(1, bitmap).sendToTarget();
+                            off -= width*height;
                         }
                     }
                     socket.close();
