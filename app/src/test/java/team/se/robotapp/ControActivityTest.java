@@ -1,7 +1,9 @@
 package team.se.robotapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.junit.Before;
@@ -14,6 +16,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowApplication;
 
 import static org.junit.Assert.assertEquals;
 
@@ -53,5 +56,14 @@ public class ControActivityTest {
         String s5 = appContext.getString(R.string.State_Con);
         assertEquals(s5,((TextView)activity.findViewById(R.id.conStateText)).getText());
 
+    }
+
+    @Test
+    public void nav_button_click() {
+        ControActivity activity = Robolectric.setupActivity(ControActivity.class);
+        activity.findViewById(R.id.buttonNav).performClick();
+        Intent expectedIntent = new Intent(activity, NavActivity.class);
+        Intent actualIntent = ShadowApplication.getInstance().getNextStartedActivity();
+        assertEquals(expectedIntent, actualIntent);
     }
 }
