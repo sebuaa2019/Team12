@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
@@ -18,7 +19,12 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 
+import team.se.util.Img_refresh;
+import team.se.util.Map_refresh;
+import team.se.util.TransContro;
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21, constants = BuildConfig.class)
@@ -66,4 +72,27 @@ public class ControActivityTest {
         Intent actualIntent = ShadowApplication.getInstance().getNextStartedActivity();
         assertEquals(expectedIntent, actualIntent);
     }
+
+    @Test
+    public void cam_button_click() {
+        ControActivity activity = Robolectric.setupActivity(ControActivity.class);
+        activity.findViewById(R.id.displayCam).performClick();
+        Img_refresh img_refresh = mock(Img_refresh.class);
+        Mockito.verify(img_refresh).startRecv();
+        Map_refresh map_refresh = mock(Map_refresh.class);
+        Mockito.verify(map_refresh).stopRecv();
+        assertEquals(1,activity.getSwitch());
+    }
+
+    @Test
+    public void map_button_click() {
+        ControActivity activity = Robolectric.setupActivity(ControActivity.class);
+        activity.findViewById(R.id.displayMap).performClick();
+        Img_refresh img_refresh = mock(Img_refresh.class);
+        Mockito.verify(img_refresh).startRecv();
+        Map_refresh map_refresh = mock(Map_refresh.class);
+        Mockito.verify(map_refresh).stopRecv();
+        assertEquals(0,activity.getSwitch());
+    }
+
 }

@@ -166,4 +166,8 @@ public class ControActivity extends AppCompatActivity {
             }
         }
     }
+
+    public int getSwitch() {
+        return Switch;
+    }
 }
