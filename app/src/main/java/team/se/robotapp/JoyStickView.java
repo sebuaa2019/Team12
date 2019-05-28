@@ -111,6 +111,18 @@ public class JoyStickView extends View {
         return true;
     }
 
+    public float getDot_x() {
+        return dot_x;
+    }
+
+    public float getDot_y() {
+        return dot_y;
+    }
+
+    public PointF getInit_pos() {
+        return init_pos;
+    }
+
     public int getWithinArea(float touch_x, float touch_y){
         float dist = (float)Math.sqrt(Math.pow(touch_x - init_pos.x, 2) +
                 Math.pow(touch_y - init_pos.y, 2));
