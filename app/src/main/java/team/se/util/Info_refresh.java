@@ -62,4 +62,8 @@ public class Info_refresh {
     public void stopRecv(){
         this.EXIT = true;
     }
+
+    public boolean getExit() {
+        return EXIT;
+    }
 }

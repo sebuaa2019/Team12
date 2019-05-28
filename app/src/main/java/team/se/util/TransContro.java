@@ -97,7 +97,7 @@ public class TransContro {
         transMsg("(" + String.valueOf(pos_x) + "," + String.valueOf(pos_y) + ",1.0)");
     }
 
-    private void transMsg(final String message){
+    public void transMsg(final String message){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -149,5 +149,25 @@ public class TransContro {
 
     public void stopCon(){
         EXIT = true;
+    }
+
+    public int getPORT() {
+        return PORT;
+    }
+
+    public String getHOST() {
+        return HOST;
+    }
+
+    public boolean getExit() {
+        return EXIT;
+    }
+
+    public void setPre_contro(String pre_contro) {
+        this.pre_contro = pre_contro;
+    }
+
+    public String getPre_contro() {
+        return pre_contro;
     }
 }

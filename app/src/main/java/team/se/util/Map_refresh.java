@@ -103,4 +103,8 @@ public class Map_refresh {
         EXIT = false;
         accpetServer();
     }
+
+    public boolean getExit() {
+        return EXIT;
+    }
 }

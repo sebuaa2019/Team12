@@ -99,4 +99,7 @@ public class Img_refresh {
         accpetServer();
     }
 
+    public boolean getExit() {
+        return EXIT;
+    }
 }
