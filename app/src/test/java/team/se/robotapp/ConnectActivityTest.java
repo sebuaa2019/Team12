@@ -82,7 +82,7 @@ public class ConnectActivityTest {
         Intent actualIntent = ShadowApplication.getInstance().getNextStartedActivity();
         assertEquals(expectedIntent, actualIntent);
         assertEquals(host + "|" + port,actualIntent.getStringExtra("addr"));
-    }
+     }
 
 }
 
