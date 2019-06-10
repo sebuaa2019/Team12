@@ -20,10 +20,11 @@ def sendtoclient(msg):
 
 if __name__ == "__main__":
     global conn, soc
-    HOST = rospy.get_param('HOST')
-    Info_Port = rospy.get_param('Info_Port')
+    #HOST = rospy.get_param('HOST')
+    #Info_Port = rospy.get_param('Info_Port')
     soc = socket.socket()
-    soc.bind((HOST, Info_Port))
+    #soc.bind((HOST, Info_Port))
+    soc.bind(('127.0.0.1', 2000))
     rospy.init_node('info_server')
     print('Info-Server Online!')
     soc.listen(5)

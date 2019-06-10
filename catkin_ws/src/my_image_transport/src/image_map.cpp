@@ -63,7 +63,8 @@ int main(int argc,char **argv)
 
 	//打开图片
 
-	Mat s_img = imread(argv[1],CV_LOAD_IMAGE_COLOR);
+	Mat s_img = imread("/home/chen/map.pgm",CV_LOAD_IMAGE_COLOR);
+
 //	imshow("s_img",s_img);
 //	waitKey();
 
@@ -81,10 +82,10 @@ int main(int argc,char **argv)
 	uchar* pxvec = s_img.ptr<uchar>(0);	
 
 	printf("row is :%d ,col is :%d channels is :%d\n",s_img.rows,s_img.cols,s_img.channels());
-	for( i=0;i<s_img.rows;i++)	//高度
+	for( i=368;i<624;i++)	//高度
 	{
 		pxvec = s_img.ptr<uchar>(i);	
-		for(j=0;j<s_img.cols*s_img.channels();j=j+3)
+		for(j=368*3;j<624*s_img.channels();j=j+3)
 		{	
 			
 			encode_img.push_back(pxvec[j+2]);

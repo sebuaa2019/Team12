@@ -34,31 +34,36 @@ struct sockaddr_in server_addr;
 struct sockaddr_in client_addr;
 int server_socket;
 int new_server_socket;
-int width=992;
-int height=992;
+int width=2128;
+int height=2128;
+//  2000+ 128=2128  2000 -128=1872
+// 2000+496=2496  2000-496=1504		//992
+// 496+128=624  496-128 368		//256
+// 496 +400=896 486-400=86		//800
 int flag_connect=0;
 
 void call_back(const nav_msgs::OccupancyGrid::ConstPtr &msg){
 
 	printf("call back begin\n");	
-	width = msg->info.width;
-	height = msg->info.height;
+//	width = msg->info.width;
+//	height = msg->info.height;
 	printf("data width :%d  height:%d\n",width,height);
 
 
 	uchar* send_buffer = new uchar[width*height];
 	int i,j;
 	int num=0;
-	for(i=height-1;i>=0;i--){
+	for(i=width-1;i>=1872;i--){
 	//	if(msg->data[i]!=-1) printf("%d ",msg->data[i]);
-		for(j=0;j<width;j++){
-			int k=i*width;
+		for(j=1872;j<height;j++){
+			int k=i*4000;
 			send_buffer[num++]=(uchar)(msg->data[k+j]);
 		}
 	}
 		
 
 	int toSend = width*height;
+	toSend =256*256;
 	int finished=0,receive=0;
 	while(toSend>0){
 		int size = toSend<BUFFER_SIZE?toSend:BUFFER_SIZE;

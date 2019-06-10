@@ -37,13 +37,13 @@ int server_socket;
 int new_server_socket;
 int flag_connect=0;
 
+/*
 void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 	
 	uchar* receive_buffer = new uchar[10];
 
-	double time1,time2,time3;
-
-	Mat s_img1 = cv_bridge::toCvShare(msg,"bgr8")->image;
+	Mat s_img1 = cv_bridge::toCvShare(msg,"rgba8")->image;
+//	Mat s_img1 = cv_bridge::toCvShare(msg,"bgr8")->image;
 	Mat s_img;
 	resize(s_img1,s_img,cv::Size(720,480));
 
@@ -59,7 +59,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 
 	printf("row is :%d ,col is :%d channels is :%d\n",s_img.rows,s_img.cols,s_img.channels());
 	
-	time1=clock();
+	
 	for( i=0;i<s_img.rows;i++)	//高度
 	{
 		pxvec = s_img.ptr<uchar>(i);	
@@ -71,7 +71,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 			encode_img.push_back(0xff);
 		}
 	}
-	time2=clock();
+	
 	//get_send_buffer
 	int encode_img_size = encode_img.size();
 	int s_img_size = s_img.rows * s_img.cols*3;
@@ -104,9 +104,52 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 		}	
 	}
 
-	time3 = clock();
+}
 
-	printf("time cost is :  %f   %f\n",time2-time1,time3-time2);
+*/
+
+
+void imageCallback(const sensor_msgs::ImageConstPtr& msg){
+	
+	uchar* receive_buffer = new uchar[10];
+
+	Mat s_img1 = cv_bridge::toCvShare(msg,"rgba8")->image;
+	Mat s_img;
+	resize(s_img1,s_img,cv::Size(720,480));
+
+//	cv::waitKey(30);
+	if(s_img.empty()){
+		ROS_ERROR("open error\n");
+		exit(1);
+	}
+
+	vector<uchar> encode_img;
+	int i,j;
+	uchar* pxvec = s_img.ptr<uchar>(0);	
+
+	printf("row is :%d ,col is :%d channels is :%d\n",s_img.rows,s_img.cols,s_img.channels());
+	int toSend =720*480*4,receive=0,finished=0;
+	printf("img_size is %d\n",toSend);
+
+	//send start
+	while(toSend>0){
+		int size = toSend<BUFFER_SIZE?toSend:BUFFER_SIZE;
+		if((receive = send(new_server_socket,pxvec+finished,size,0)))
+		{
+			if(receive == -1)
+			{
+				printf("receive error\n");
+				flag_connect=0;
+				new_server_socket=1;
+				return;
+			}
+			else{
+				toSend -= receive; // 剩余发送数据
+				finished += receive;	// 已发送数据
+			}
+		}	
+	}
+
 }
 
 

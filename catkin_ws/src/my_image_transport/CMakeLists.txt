@@ -150,6 +150,11 @@ target_link_libraries(my_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_executable(map_server src/map_server.cpp)
 target_link_libraries(map_server ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
+add_executable(test_socket src/test_socket.cpp)
+target_link_libraries(test_socket ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+add_executable(test_socket_receive src/test_socket_receive.cpp)
+target_link_libraries(test_socket_receive ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 
 ## Declare a C++ library

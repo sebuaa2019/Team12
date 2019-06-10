@@ -12,12 +12,13 @@ STOPMOVE = 'STOPMOVE'
 STARTNAV = 'STARTNAV'
 
 if __name__ == '__main__':
-    HOST = rospy.get_param('HOST')
-    Server_Port = rospy.get_param('Server_Port')
+    #HOST = rospy.get_param('HOST')
+    #Server_Port = rospy.get_param('Server_Port')
     rospy.init_node('main_server')
     pub = rospy.Publisher('control_signal', control_signal, queue_size=1)
     soc = socket.socket()
-    soc.bind((HOST, Server_Port))
+    #soc.bind((HOST, Server_Port))
+    soc.bind(('127.0.0.1', 1989))
     navServer = NavServer()
     print('Main-Server Online!')
     soc.listen(5)

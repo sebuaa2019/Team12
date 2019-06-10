@@ -18,10 +18,11 @@ def sendtoclient(msg):
 
 if __name__ == '__main__':
     global conn, soc
-    HOST = rospy.get_param('HOST')
-    Loc_Port = rospy.get_param('Loc_Port')
+    #HOST = rospy.get_param('HOST')
+    #Loc_Port = rospy.get_param('Loc_Port')
     soc = socket.socket()
-    soc.bind((HOST, Loc_Port))
+    #soc.bind((HOST, Loc_Port))
+    soc.bind(('127.0.0.1', 2001))
     rospy.init_node('loc_server')
     print('Loc-Server Online!')
     soc.listen(5)
