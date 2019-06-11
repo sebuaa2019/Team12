@@ -39,7 +39,7 @@ public class Img_refresh {
         this.EXIT = false;
         this.loadHandler = _loadhandler;
         this.navMapView = null;
-        this.config = Bitmap.Config.RGB_565;
+        this.config = Bitmap.Config.ARGB_8888;
         width = 720;
         height = 480;
     }

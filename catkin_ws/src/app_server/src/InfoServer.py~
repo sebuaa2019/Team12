@@ -24,7 +24,7 @@ if __name__ == "__main__":
     #Info_Port = rospy.get_param('Info_Port')
     soc = socket.socket()
     #soc.bind((HOST, Info_Port))
-    soc.bind(('192.168.43.229', 2000))
+	soc.bind(('192.168.43.229', 2000))
     rospy.init_node('info_server')
     print('Info-Server Online!')
     soc.listen(5)

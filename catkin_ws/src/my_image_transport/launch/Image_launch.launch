@@ -1,5 +1,4 @@
 <launch>
     <node name="map_server" pkg="my_image_transport" type="map_server" output="screen"/>
-    <node name="nav_map" pkg="my_image_transport" type ="image_map" output="screen"/>   
     <node name="image_server" pkg="my_image_transport"  type="Socket_Server"  output="screen"/>
 </launch>

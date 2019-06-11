@@ -1,24 +1,12 @@
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 #include "geometry_msgs/Twist.h"
-#include <time.h>
+
 double angleMinLeft,distMinLeft,angleMinRight,distMinRight;
- double time1,time2;
 
 ros::Publisher pub;
 
 void messageCallback(const sensor_msgs::LaserScan::ConstPtr& msg){
-    geometry_msgs::Twist speed;
-
-    time2 = clock(); 
-    if((time2-time1)/CLOCKS_PER_SEC>2){
-	speed.angular.z = 0;
-        speed.linear.x =0; 
-	pub.publish(speed);
-        printf("机器人已经停止漫游");
-	ros::shutdown();
-    }
-   
     int size = msg->ranges.size();
     //最小range左右索引值获取
     int minIndexLeft = 0;
@@ -40,11 +28,11 @@ void messageCallback(const sensor_msgs::LaserScan::ConstPtr& msg){
     angleMinRight = (minIndexRight - size/2) * msg->angle_increment;
     distMinRight = msg->ranges[minIndexRight];
 
-  
+    geometry_msgs::Twist speed;
     
     //设置机器人运动角度 速度 （选择距离
     speed.angular.z = distMinLeft < distMinRight? -(2*distMinRight/distMinLeft-2) :  (2*distMinLeft/distMinRight - 2) ;
-    speed.linear.x = 0.05;
+    speed.linear.x = 0.1;
 
     if( distMinLeft<0.25 && distMinRight<0.25 && angleMinLeft <0.7 && angleMinRight <0.7){
         speed.angular.z *= 50;
@@ -59,17 +47,11 @@ int main(int argc, char **argv)
     /* code for main function */
     ros::init(argc, argv, "auto_walk");
     ros::NodeHandle n;
-   
-    pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 100);
-    time1 = clock();
-    ros::Subscriber sub = n.subscribe("/scan", 5, messageCallback);
-    ros::Rate loop_rate(10);
-	
-    while(ros::ok()){
-	ros::spinOnce();
-        loop_rate.sleep();
-    }
     
+    pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 100);
+
+    ros::Subscriber sub = n.subscribe("/scan", 1, messageCallback);
+    ros::spin();
   
     return 0;
 }

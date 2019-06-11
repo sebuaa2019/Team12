@@ -161,8 +161,8 @@ int main(int argc,char **argv)
 	
 	ros::NodeHandle nh;
 	image_transport::ImageTransport it(nh);
-	image_transport::Subscriber sub = it.subscribe("camera/rgb/image_raw", 1, imageCallback);
-	ros::Rate loop_rate(10);
+	image_transport::Subscriber sub = it.subscribe("kinect2/hd/image_color", 1, imageCallback);
+	ros::Rate loop_rate(1);
 
 
 	bzero(&server_addr,sizeof(server_addr)); //把一段内存区的内容全部设置为

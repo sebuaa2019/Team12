@@ -20,6 +20,7 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "image_listener");
   ros::NodeHandle nh;
+  system("./src/my_image_transport/src/test.sh");
   cv::namedWindow("view");
   cv::startWindowThread();
   image_transport::ImageTransport it(nh);

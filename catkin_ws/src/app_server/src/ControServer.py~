@@ -27,6 +27,7 @@ def pub_vel(thread_name):
     rate = rospy.Rate(30)
     pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
     while (rospy.is_shutdown() == False):
+        print(twist)
         pub.publish(twist)
         rate.sleep()
 

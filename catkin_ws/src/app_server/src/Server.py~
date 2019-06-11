@@ -26,7 +26,6 @@ if __name__ == '__main__':
         conn, addr = soc.accept()
         print("Main-Server >> Connection From : " + addr[0])
         data = conn.recv(1024)
-        print(data)
         if (data in SIGNAL):
             pub.publish(control_signal(data, False))
         elif (data == STOPMOVE):
@@ -39,5 +38,3 @@ if __name__ == '__main__':
             navServer.append_waypoint(pos_X, pos_Y, ori_W)
         elif (data == STARTNAV):
             navServer.start(conn)
-        elif (data == 'SAVE_MAP_AND_NAV'):
-            print('start map and nav')
