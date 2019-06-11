@@ -60,6 +60,10 @@ public class Img_refresh {
             @Override
             public void run() {
                 try{
+
+                    if (navMapView != null)
+                        Thread.sleep(3000);
+
                     socket = new Socket(Host,Port);
 
                     InputStream inputStream = socket.getInputStream();

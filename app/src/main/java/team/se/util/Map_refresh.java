@@ -43,6 +43,8 @@ public class Map_refresh {
             @Override
             public void run() {
                 try{
+
+
                     socket = new Socket(Host,port);
 
                     InputStream inputStream = socket.getInputStream();

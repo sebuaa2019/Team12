@@ -15,4 +15,5 @@
     <string name="startNav">Start Navigation</string>
     <string name="displayCam">Camera</string>
     <string name="displayMap">ScanMap</string>
+    <string name="autoAvoid">AUTO</string>
 </resources>
